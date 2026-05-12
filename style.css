@@ -1,0 +1,521 @@
+:root {
+  --ink: #1b1410;
+  --paper: #f6efe2;
+  --peach: #e9805a;
+  --reed: #a8c08a;
+}
+* {
+  box-sizing: border-box;
+}
+html,
+body {
+  margin: 0;
+  height: 100%;
+  background: #0c1518;
+  color: var(--paper);
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  overflow: hidden;
+  -webkit-font-smoothing: antialiased;
+}
+#root {
+  position: fixed;
+  inset: 0;
+}
+canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  image-rendering: auto;
+}
+
+/* ── HUD ── */
+.hud {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 18px 22px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  pointer-events: none;
+  z-index: 5;
+}
+.hud .brand {
+  font-family: "Fraunces", serif;
+  font-weight: 500;
+  font-style: italic;
+  font-size: 22px;
+  letter-spacing: 0.01em;
+  color: var(--paper);
+  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.25);
+}
+.hud .brand small {
+  display: block;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 226, 0.6);
+  font-style: normal;
+  margin-top: 2px;
+}
+.stats {
+  display: flex;
+  gap: 18px;
+  background: rgba(11, 18, 21, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid rgba(246, 239, 226, 0.18);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 11px;
+  letter-spacing: 0.06em;
+}
+.stat {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 54px;
+}
+.stat .k {
+  font-size: 9px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 226, 0.5);
+}
+.stat .v {
+  font-family: "Fraunces", serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+.stat .v.accent {
+  color: var(--peach);
+}
+
+/* ── ROUND BAR (top centre) ── */
+.roundbar {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  transform: translateX(-50%);
+  z-index: 5;
+  pointer-events: none;
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  background: rgba(11, 18, 21, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid rgba(246, 239, 226, 0.18);
+  border-radius: 10px;
+  padding: 10px 18px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 226, 0.6);
+}
+.roundbar.hidden {
+  display: none;
+}
+.roundbar .alive {
+  font-family: "Fraunces", serif;
+  font-size: 22px;
+  font-weight: 500;
+  color: var(--paper);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1;
+}
+.roundbar .label {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+.roundbar .sep {
+  width: 1px;
+  height: 24px;
+  background: rgba(246, 239, 226, 0.18);
+}
+
+/* ── TOAST ── */
+.toast {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  transform: translate(-50%, -50%);
+  z-index: 6;
+  pointer-events: none;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.25s ease;
+}
+.toast.show {
+  opacity: 1;
+}
+.toast .big {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 64px;
+  line-height: 1;
+  color: var(--paper);
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+.toast .sub {
+  font-size: 11px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 226, 0.75);
+  margin-top: 8px;
+}
+
+/* ── CATCH LOG / ELIMINATED FEED ── */
+.catchlog {
+  position: absolute;
+  left: 22px;
+  bottom: 22px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+  pointer-events: none;
+  max-height: 40vh;
+  overflow: hidden;
+}
+.catchlog .row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(11, 18, 21, 0.5);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  border: 0.5px solid rgba(246, 239, 226, 0.15);
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  color: rgba(246, 239, 226, 0.85);
+  animation: slideIn 0.35s ease;
+}
+.catchlog .row .dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.catchlog .row .x {
+  color: #e9805a;
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0;
+}
+.catchlog .row b {
+  font-family: "Fraunces", serif;
+  font-weight: 600;
+  font-size: 12px;
+  color: var(--paper);
+}
+.catchlog .row .sp {
+  opacity: 0.6;
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-8px);
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* ── TOURNAMENT PANEL (bottom centre) ── */
+.tournament {
+  position: absolute;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 6;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  pointer-events: auto;
+}
+.tournament.hidden {
+  display: none;
+}
+.release-btn {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  background: linear-gradient(180deg, #e9805a, #b8421f);
+  color: #0c0604;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 12px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding: 16px 28px;
+  border-radius: 12px;
+  box-shadow:
+    0 14px 30px rgba(184, 66, 31, 0.35),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 0.5px rgba(0, 0, 0, 0.4);
+  transition:
+    transform 0.12s ease,
+    box-shadow 0.12s ease;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+.release-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow:
+    0 18px 40px rgba(184, 66, 31, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.4),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.3),
+    0 0 0 0.5px rgba(0, 0, 0, 0.4);
+}
+.release-btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+.release-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  filter: grayscale(0.5);
+}
+.release-btn .ico {
+  margin-right: 8px;
+  letter-spacing: 0;
+  font-size: 14px;
+}
+.release-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.auto-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(11, 18, 21, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 0.5px solid rgba(246, 239, 226, 0.18);
+  border-radius: 10px;
+  padding: 10px 12px;
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 226, 0.8);
+  cursor: pointer;
+}
+.auto-label input {
+  accent-color: #e9805a;
+  cursor: pointer;
+}
+.countdown {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-size: 13px;
+  color: rgba(246, 239, 226, 0.7);
+  letter-spacing: 0.04em;
+  min-height: 18px;
+}
+.countdown b {
+  color: var(--peach);
+  font-style: normal;
+  font-weight: 700;
+  font-size: 15px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── START CARD ── */
+.startcard {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  background: rgba(11, 18, 21, 0.55);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+.startcard.gone {
+  display: none;
+}
+.startcard .box {
+  background: #f6efe2;
+  color: #1b1410;
+  border-radius: 18px;
+  padding: 32px 36px;
+  width: min(420px, 92vw);
+  box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
+  text-align: left;
+}
+.startcard h1 {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: 38px;
+  margin: 0 0 4px;
+  letter-spacing: -0.01em;
+}
+.startcard h1 em {
+  font-style: italic;
+  color: var(--peach);
+  font-weight: 500;
+}
+.startcard .tag {
+  font-size: 10px;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: rgba(27, 20, 16, 0.55);
+  margin-bottom: 18px;
+}
+.startcard p {
+  font-size: 12px;
+  line-height: 1.55;
+  color: rgba(27, 20, 16, 0.78);
+  margin: 0 0 18px;
+}
+.startcard label.field {
+  font-size: 10px;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(27, 20, 16, 0.55);
+  display: block;
+  margin-bottom: 4px;
+}
+.startcard textarea {
+  width: 100%;
+  min-height: 96px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(27, 20, 16, 0.2);
+  background: #fff;
+  color: #1b1410;
+  resize: vertical;
+  margin: 6px 0 14px;
+  letter-spacing: 0.02em;
+  line-height: 1.5;
+  outline: none;
+}
+.startcard textarea:focus {
+  border-color: rgba(27, 20, 16, 0.4);
+}
+.startcard button {
+  appearance: none;
+  border: 0;
+  background: #1b1410;
+  color: #f6efe2;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 14px 22px;
+  border-radius: 10px;
+  cursor: pointer;
+  width: 100%;
+  transition: transform 0.15s ease;
+}
+.startcard button:hover:not(:disabled) {
+  transform: translateY(-1px);
+  background: #2a1f18;
+}
+.startcard button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* ── WINNER OVERLAY ── */
+.winner {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 30;
+  background: radial-gradient(
+    circle at 50% 50%,
+    rgba(20, 16, 12, 0.6),
+    rgba(4, 2, 2, 0.92)
+  );
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  animation: fadeIn 0.8s ease;
+}
+.winner.hidden {
+  display: none;
+}
+.winner .inner {
+  text-align: center;
+}
+.winner .crown {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 10px;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--peach);
+  margin-bottom: 14px;
+}
+.winner h2 {
+  font-family: "Fraunces", serif;
+  font-style: italic;
+  font-weight: 500;
+  font-size: 18px;
+  color: rgba(246, 239, 226, 0.7);
+  margin: 0 0 8px;
+  letter-spacing: 0.04em;
+}
+.winner .name {
+  font-family: "Fraunces", serif;
+  font-weight: 700;
+  font-size: clamp(48px, 8vw, 96px);
+  color: var(--paper);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  text-shadow: 0 4px 30px rgba(233, 128, 90, 0.4);
+  margin: 0 0 18px;
+}
+.winner .species {
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  color: rgba(246, 239, 226, 0.55);
+  margin-bottom: 32px;
+}
+.winner button {
+  appearance: none;
+  border: 0;
+  cursor: pointer;
+  background: transparent;
+  color: var(--paper);
+  border: 0.5px solid rgba(246, 239, 226, 0.4);
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-family: "JetBrains Mono", monospace;
+  font-size: 11px;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  transition: background 0.15s;
+}
+.winner button:hover {
+  background: rgba(246, 239, 226, 0.08);
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
