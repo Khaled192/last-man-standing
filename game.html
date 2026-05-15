@@ -1,123 +1,37 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <title>Last Fish Standing</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="./style.css" />
-  </head>
-  <body>
-    <div id="root">
-      <canvas id="c"></canvas>
+<head>
+<meta charset="utf-8" />
+<title>River Fisher — Last Man Standing</title>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+<div id="root"></div>
 
-      <!-- HUD -->
-      <div class="hud">
-        <div class="brand">
-          Last Fish
-          <em style="font-style: italic; color: var(--peach)">Standing</em>
-          <small>elimination · river beat</small>
-        </div>
-        <div class="stats" id="hud-stats" style="display: none">
-          <div class="stat">
-            <div class="k">Eliminated</div>
-            <div class="v accent" id="stat-elim">0</div>
-          </div>
-          <div class="stat">
-            <div class="k">Total</div>
-            <div class="v" id="stat-total">0</div>
-          </div>
-        </div>
-      </div>
+<!-- Floating tweaks button (standalone-mode access to the settings panel) -->
+<button id="tweaks-toggle" type="button" aria-label="Open tweaks">
+  <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+    <circle cx="12" cy="12" r="3"/>
+    <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/>
+  </svg>
+</button>
+<script>
+  document.getElementById('tweaks-toggle').addEventListener('click', () => {
+    if (typeof window.__openTweaks === 'function') window.__openTweaks();
+  });
+</script>
 
-      <!-- Round bar (top centre) -->
-      <div class="roundbar hidden" id="roundbar">
-        <div class="label">
-          <span>Swimming</span>
-          <span class="alive" id="rb-alive">0</span>
-        </div>
-        <div class="sep"></div>
-        <div class="label">
-          <span>Round</span>
-          <span class="alive" id="rb-round">1</span>
-        </div>
-      </div>
+<!-- React -->
+<script crossorigin src="https://unpkg.com/react@18.3.1/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18.3.1/umd/react-dom.development.js"></script>
 
-      <!-- Toast -->
-      <div class="toast" id="toast">
-        <div class="big" id="toast-big"></div>
-        <div class="sub" id="toast-sub"></div>
-      </div>
-
-      <!-- Eliminated feed -->
-      <div class="catchlog" id="catchlog"></div>
-
-      <!-- Tournament panel -->
-      <div class="tournament hidden" id="tournament">
-        <div class="countdown" id="countdown"></div>
-        <div class="release-row">
-          <button class="release-btn" id="release-btn">
-            <span class="ico">⤓</span> Release Rod
-          </button>
-          <label class="auto-label">
-            <input type="checkbox" id="auto-check" />
-            <span>Auto</span>
-          </label>
-        </div>
-      </div>
-
-      <!-- Start card -->
-      <div class="startcard" id="startcard">
-        <div class="box">
-          <div class="tag">Last Man Standing · River</div>
-          <h1>Last Fish <em>Standing</em></h1>
-          <p>
-            Every fish in the river holds a name. Drop the rod at random — the
-            first one to touch the hook is out. Eliminate until one swims alone.
-          </p>
-          <label class="field" for="names-ta"
-            >Participants (one per line)</label
-          >
-          <textarea id="names-ta" spellcheck="false">
-Alex
-Maria
-Jordan
-Sam
-Riley
-Casey
-Morgan
-Drew
-Taylor
-Jamie
-Avery
-Quinn
-Reese
-Sage
-Rowan
-Blake</textarea
-          >
-          <button id="start-btn">
-            Begin tournament · <span id="start-count">16</span> fish
-          </button>
-        </div>
-      </div>
-
-      <!-- Winner overlay -->
-      <div class="winner hidden" id="winner">
-        <div class="inner">
-          <div class="crown">◆ LAST MAN STANDING ◆</div>
-          <h2>Champion of the river</h2>
-          <div class="name" id="winner-name"></div>
-          <div class="species" id="winner-species"></div>
-          <button id="again-btn">New tournament</button>
-        </div>
-      </div>
-    </div>
-    <script src="./script.js"></script>
-  </body>
+<!-- Game scripts — already compiled to plain JS (no Babel needed) -->
+<script src="tweaks-panel.js"></script>
+<script src="audio.js"></script>
+<script src="game.js"></script>
+</body>
 </html>
