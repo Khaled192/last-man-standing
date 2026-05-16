@@ -29,14 +29,14 @@ const DEFAULT_ROSTER = [
   "Kit",
 ];
 const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/ {
-  timeOfDay: "night",
+  timeOfDay: "day",
   waterDepth: "deep",
   weather: "storm",
   fog: 0.55,
   showNames: true,
   showFishOutline: false,
   boatDrift: true,
-  lantern: true,
+  lantern: false,
   rain: true,
   schoolBehavior: true,
   autoRound: false,
@@ -47,9 +47,9 @@ const TWEAK_DEFAULTS = /*EDITMODE-BEGIN*/ {
 const WORLD = {
   surfaceY: 0.34,
   boatBob: 7,
-  reelSpeed: 520,
+  reelSpeed: 780,
   // faster reel
-  castSpeed: 820,
+  castSpeed: 1230,
   // faster cast
   hookTouchRadius: 22, // bigger touch zone (matches bigger bait)
 };
@@ -129,12 +129,13 @@ const CARP = {
   // silvery-cream belly
   fin: "#7a5a32",
   // olive-brown top fins (dorsal, tail)
-  finRed: "#a44a28",
+  finRed: "#10351c",
   // reddish-orange lower fins (pectoral, anal, pelvic)
   finEdge: "#3a2418",
   scale: "rgba(20,12,4,.40)",
   scaleHi: "rgba(255,240,200,.22)",
-  size: [88, 116], // bigger, chunkier fish
+  // size: [22, 29],
+  size: [32, 39],
 };
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -1274,7 +1275,7 @@ function drawBoat(
     ctx.fillRect(rx - 2, -9, 1, 6);
   }
   // ── Stern: Elevate Baits bag (branding) standing on the deck ──────
-  drawBaitBag(ctx, -128, -42, 44, 46, baitImg);
+  drawBaitBag(ctx, -136, -90, 106, 110, baitImg);
   ctx.save();
   ctx.translate(118, -16);
   ctx.fillStyle = "#3a2e1f";
@@ -1325,106 +1326,24 @@ function drawBoat(
   ctx.restore();
 }
 
-// Bait bag (Elevate Baits / CarpLife Berry Bomb) sitting on the stern.
-// Black resealable pouch with bright accents and the photo label visible.
+// Bait image sitting on the stern — draws the full image without cropping.
 function drawBaitBag(ctx, x, y, w, h, baitImg) {
   ctx.save();
-  // Drop shadow under the bag
-  ctx.globalAlpha = 0.4;
+  // Drop shadow
+  ctx.globalAlpha = 0.35;
   ctx.fillStyle = "#000";
   ctx.beginPath();
-  ctx.ellipse(x + w / 2, y + h + 2, w * 0.55, 1.8, 0, 0, Math.PI * 2);
+  ctx.ellipse(x + w / 2, y + h + 2, w * 0.5, 2, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.globalAlpha = 1;
 
-  // Pouch body — black with subtle vertical sheen
-  const bagG = ctx.createLinearGradient(x, y, x + w, y);
-  bagG.addColorStop(0, "#0a0a0a");
-  bagG.addColorStop(0.5, "#262626");
-  bagG.addColorStop(1, "#0a0a0a");
-  ctx.fillStyle = bagG;
-  // Body slightly trapezoidal
-  ctx.beginPath();
-  ctx.moveTo(x + 1, y + 4);
-  ctx.lineTo(x + w - 1, y + 4);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.closePath();
-  ctx.fill();
-
-  // Top zipper strip
-  ctx.fillStyle = "#1a1a1a";
-  ctx.fillRect(x, y, w, 4);
-  ctx.fillStyle = "#3a3a3a";
-  ctx.fillRect(x + 1, y + 1, w - 2, 1);
-  // Zipper teeth tick marks
-  ctx.fillStyle = "#5a5a5a";
-  for (let i = 2; i < w - 1; i += 2) ctx.fillRect(x + i, y + 2, 0.6, 1);
-
-  // If the image loaded, draw a small label "window" with the photo
-  const lx = x + 2,
-    ly = y + 8,
-    lw = w - 4,
-    lh = h - 12;
   if (baitImg && baitImg.complete && baitImg.naturalWidth > 0) {
-    // Frame
-    ctx.fillStyle = "#040404";
-    ctx.fillRect(lx - 0.5, ly - 0.5, lw + 1, lh + 1);
-    // Image: source-crop the center so we get the boilies/red part visible
-    const iw = baitImg.naturalWidth;
-    const ih = baitImg.naturalHeight;
-    // The provided image is mostly central product on white; crop a centered square
-    const cropSize = Math.min(iw, ih) * 0.55;
-    const sx = (iw - cropSize) / 2;
-    const sy = (ih - cropSize) / 2;
-    ctx.drawImage(baitImg, sx, sy, cropSize, cropSize, lx, ly, lw, lh);
-    // Subtle dark vignette so it reads against the night water
-    ctx.fillStyle = "rgba(0,0,0,.18)";
-    ctx.fillRect(lx, ly, lw, lh);
+    ctx.drawImage(baitImg, x, y, w, h);
   } else {
-    // Placeholder: bright pink/red bait-color block with tiny "berry" dots
+    // Fallback placeholder
     ctx.fillStyle = "#d8345b";
-    ctx.fillRect(lx, ly, lw, lh);
-    ctx.fillStyle = "rgba(40,4,8,.5)";
-    for (let i = 0; i < 6; i++) {
-      ctx.beginPath();
-      ctx.arc(
-        lx + 3 + (i % 3) * (lw / 3),
-        ly + 4 + Math.floor(i / 3) * (lh / 2),
-        1.4,
-        0,
-        Math.PI * 2,
-      );
-      ctx.fill();
-    }
+    ctx.fillRect(x, y, w, h);
   }
-
-  // Brand chevron logo (the bright yellow/green arrow at top of real bag)
-  ctx.fillStyle = "#bcd83a";
-  ctx.beginPath();
-  ctx.moveTo(x + w / 2 - 4, y + 5.5);
-  ctx.lineTo(x + w / 2, y + 4.2);
-  ctx.lineTo(x + w / 2 + 4, y + 5.5);
-  ctx.lineTo(x + w / 2 + 3, y + 6.2);
-  ctx.lineTo(x + w / 2, y + 5.4);
-  ctx.lineTo(x + w / 2 - 3, y + 6.2);
-  ctx.closePath();
-  ctx.fill();
-
-  // Glossy edge highlight on the bag's left side
-  ctx.fillStyle = "rgba(255,255,255,.06)";
-  ctx.fillRect(x + 1, y + 5, 1.4, h - 7);
-
-  // Pouch outline
-  ctx.strokeStyle = "rgba(180,180,180,.18)";
-  ctx.lineWidth = 0.5;
-  ctx.beginPath();
-  ctx.moveTo(x + 1, y + 4);
-  ctx.lineTo(x + w - 1, y + 4);
-  ctx.lineTo(x + w, y + h);
-  ctx.lineTo(x, y + h);
-  ctx.closePath();
-  ctx.stroke();
   ctx.restore();
 }
 function drawFisherman(ctx, x, y, t, palette, lanternKey) {
@@ -1754,17 +1673,44 @@ function App() {
   const [eliminated, setEliminated] = useState([]); // [{name, species, round}]
   const [winner, setWinner] = useState(null);
   const [started, setStarted] = useState(false);
-  const [roster, setRoster] = useState(DEFAULT_ROSTER.join("\n"));
+  const [roster, setRoster] = useState([]);
+  const [uploadError, setUploadError] = useState(null);
+  const fileInputRef = useRef(null);
   const [hookBusy, setHookBusy] = useState(false);
   const [countdown, setCountdown] = useState(null);
-  const rosterArr = useMemo(
-    () =>
-      roster
-        .split("\n")
-        .map((s) => s.trim())
-        .filter(Boolean),
-    [roster],
-  );
+  const [catchFlash, setCatchFlash] = useState(null);
+  const rosterArr = roster;
+
+  const handleExcelUpload = useCallback((e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    setUploadError(null);
+    const reader = new FileReader();
+    reader.onload = (evt) => {
+      try {
+        const wb = XLSX.read(evt.target.result, { type: "binary" });
+        const ws = wb.Sheets[wb.SheetNames[0]];
+        const rows = XLSX.utils.sheet_to_json(ws, { header: 1 });
+        const names = rows
+          .map((row) =>
+            row[0] !== undefined && row[0] !== null
+              ? String(row[0]).trim()
+              : "",
+          )
+          .filter(Boolean);
+        if (names.length < 2) {
+          setUploadError("Need at least 2 names in column A.");
+          return;
+        }
+        setRoster(names);
+      } catch {
+        setUploadError(
+          "Could not read file. Please upload a valid Excel (.xlsx) file.",
+        );
+      }
+    };
+    reader.readAsBinaryString(file);
+  }, []);
 
   // Load logo + bait branding image
   useEffect(() => {
@@ -2047,6 +1993,8 @@ function App() {
                 },
                 ...L,
               ]);
+              setCatchFlash(sp.name);
+              setTimeout(() => setCatchFlash(null), 5000);
               if (window.fishAudio) {
                 window.fishAudio.stopReel();
                 window.fishAudio.playCatch();
@@ -2327,6 +2275,13 @@ function App() {
     /*#__PURE__*/ React.createElement("canvas", {
       ref: canvasRef,
     }),
+    catchFlash &&
+      /*#__PURE__*/ React.createElement(
+        "div",
+        { className: "catch-flash" },
+        /*#__PURE__*/ React.createElement("span", { className: "catch-flash-label" }, "Caught"),
+        /*#__PURE__*/ React.createElement("span", { className: "catch-flash-name" }, catchFlash),
+      ),
     /*#__PURE__*/ React.createElement(
       "div",
       {
@@ -2342,7 +2297,7 @@ function App() {
         /*#__PURE__*/ React.createElement(
           "small",
           null,
-          "last man standing \xB7 river beat 7",
+          "last man standing",
         ),
       ),
       /*#__PURE__*/ React.createElement(
@@ -2455,15 +2410,6 @@ function App() {
             "\u2715",
           ),
           /*#__PURE__*/ React.createElement("b", null, e.name),
-          /*#__PURE__*/ React.createElement(
-            "span",
-            {
-              style: {
-                opacity: 0.6,
-              },
-            },
-            e.species,
-          ),
         ),
       ),
     ),
@@ -2561,15 +2507,38 @@ function App() {
         ),
         /*#__PURE__*/ React.createElement(
           "label",
-          {
-            className: "field",
-          },
-          "Participants (one per line)",
+          { className: "field" },
+          "Participants",
         ),
-        /*#__PURE__*/ React.createElement("textarea", {
-          value: roster,
-          onChange: (e) => setRoster(e.target.value),
-        }),
+        /*#__PURE__*/ React.createElement(
+          "div",
+          { className: "upload-zone" },
+          /*#__PURE__*/ React.createElement("input", {
+            type: "file",
+            accept: ".xlsx,.xls,.csv",
+            style: { display: "none" },
+            ref: fileInputRef,
+            onChange: handleExcelUpload,
+          }),
+          /*#__PURE__*/ React.createElement(
+            "button",
+            {
+              type: "button",
+              className: "upload-btn",
+              onClick: () =>
+                fileInputRef.current && fileInputRef.current.click(),
+            },
+            rosterArr.length > 0
+              ? "✓ " + rosterArr.length + " players loaded — click to replace"
+              : "⬆ Upload Excel file (.xlsx)",
+          ),
+          uploadError &&
+            /*#__PURE__*/ React.createElement(
+              "p",
+              { className: "upload-error" },
+              uploadError,
+            ),
+        ),
         /*#__PURE__*/ React.createElement(
           "button",
           {

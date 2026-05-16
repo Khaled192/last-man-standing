@@ -1,5 +1,6 @@
-// River Fisher — synthesised audio engine. No asset files; everything
-// generated live with Web Audio. Exposed as window.fishAudio.
+// River Fisher — audio engine.
+// MP3 assets: sound/music.mp3, sound/rain.mp3, sound/storm.mp3
+// Synthesised SFX: cast, splash, bite, reel, catch, eliminate, win, thunder.
 
 (function () {
   let ctx = null;
@@ -7,8 +8,20 @@
   let initialized = false;
   let muted = false;
   let masterLevel = 0.75;
-  let layers = {};
   let reelNode = null;
+
+  // MP3 ambient tracks — plain Audio elements, no Web Audio routing needed
+  const mp3 = {
+    music: { audio: null },
+    rain:  { audio: null },
+  };
+  // Target gain (0-1) per track
+  const pendingGain = { music: 0.4, rain: 0 };
+  // Storm sound — one-shot on lightning strike
+  let stormSoundUrl = "sound/storm.mp3";
+
+  // Synthesised ambient layers (river, shimmer, crickets, flame)
+  let layers = {};
 
   // ─── Noise generation ──────────────────────────────────────────────
   function makeNoise(seconds, type) {
@@ -42,23 +55,33 @@
     return buf;
   }
 
-  function loopedSource(buf, dest, baseGain, filt) {
-    const src = ctx.createBufferSource();
-    src.buffer = buf; src.loop = true;
-    const g = ctx.createGain(); g.gain.value = baseGain;
-    const f = ctx.createBiquadFilter();
-    f.type = filt.type; f.frequency.value = filt.freq; f.Q.value = filt.Q || 0.7;
-    src.connect(f).connect(g).connect(dest);
-    src.start();
-    return { src, g, f };
-  }
-
-  function ramp(p, v, t = 0.6) {
+function ramp(p, v, t = 0.6) {
     if (!ctx) return;
     const now = ctx.currentTime;
     p.cancelScheduledValues(now);
     p.setValueAtTime(p.value, now);
-    p.linearRampToValueAtTime(v, now + t);
+    p.linearRampToValueAtTime(Math.max(0, v), now + t);
+  }
+
+  // ─── MP3 helpers ───────────────────────────────────────────────────
+  function applyMp3Volume(key) {
+    const a = mp3[key].audio;
+    if (!a) return;
+    a.volume = Math.min(1, Math.max(0, pendingGain[key] * masterLevel * (muted ? 0 : 1)));
+  }
+
+  function setupMp3Track(key, url) {
+    const audio = new Audio(url);
+    audio.loop = true;
+    audio.volume = 0;
+    audio.play().catch(() => {});
+    mp3[key].audio = audio;
+    applyMp3Volume(key);
+  }
+
+  function setMp3Gain(key, target) {
+    pendingGain[key] = target;
+    applyMp3Volume(key);
   }
 
   // ─── Init (lazy, on first user gesture) ────────────────────────────
@@ -69,45 +92,15 @@
     ctx = new AC();
     initialized = true;
 
-    master = ctx.createGain(); master.gain.value = masterLevel; master.connect(ctx.destination);
-    ambientGain = ctx.createGain(); ambientGain.gain.value = 0.85; ambientGain.connect(master);
-    sfxGain     = ctx.createGain(); sfxGain.gain.value = 1.0;    sfxGain.connect(master);
+    master      = ctx.createGain(); master.gain.value = masterLevel; master.connect(ctx.destination);
+    ambientGain = ctx.createGain(); ambientGain.gain.value = 0.85;   ambientGain.connect(master);
+    sfxGain     = ctx.createGain(); sfxGain.gain.value = 1.0;        sfxGain.connect(master);
 
-    const pink  = makeNoise(4, "pink");
-    const white = makeNoise(4, "white");
-    const brown = makeNoise(4, "brown");
+    layers = {};
 
-    // River flow — brown noise, low-passed, with slow LFO swell
-    const river = loopedSource(brown, ambientGain, 0, { type: "lowpass", freq: 420, Q: 0.5 });
-    const riverSwell = ctx.createOscillator(); riverSwell.frequency.value = 0.07;
-    const riverSwellG = ctx.createGain(); riverSwellG.gain.value = 0.05;
-    riverSwell.connect(riverSwellG).connect(river.g.gain); riverSwell.start();
-
-    // River shimmer — high bandpass over pink, very faint
-    const shimmer = loopedSource(pink, ambientGain, 0, { type: "bandpass", freq: 2800, Q: 0.8 });
-
-    // Wind — pink noise lowpassed, swelling
-    const wind = loopedSource(pink, ambientGain, 0, { type: "lowpass", freq: 600, Q: 0.9 });
-    const windLFO = ctx.createOscillator(); windLFO.frequency.value = 0.15;
-    const windLFOG = ctx.createGain(); windLFOG.gain.value = 0.12;
-    windLFO.connect(windLFOG).connect(wind.g.gain); windLFO.start();
-
-    // Rain — white noise high-passed
-    const rain = loopedSource(white, ambientGain, 0, { type: "highpass", freq: 1800, Q: 0.7 });
-
-    // Heavy rain low layer — wet patter, white lowpassed
-    const rainLow = loopedSource(white, ambientGain, 0, { type: "bandpass", freq: 900, Q: 0.5 });
-
-    // Crickets — fast-modulated bandpass
-    const crickets = loopedSource(white, ambientGain, 0, { type: "bandpass", freq: 5400, Q: 14 });
-    const cLFO = ctx.createOscillator(); cLFO.frequency.value = 11; cLFO.type = "sawtooth";
-    const cLFOG = ctx.createGain(); cLFOG.gain.value = 0.4;
-    cLFO.connect(cLFOG).connect(crickets.g.gain); cLFO.start();
-
-    // Lantern flame — soft crackle
-    const flame = loopedSource(pink, ambientGain, 0, { type: "lowpass", freq: 260, Q: 0.9 });
-
-    layers = { river, shimmer, wind, rain, rainLow, crickets, flame };
+    // Wire up MP3 ambient tracks
+    setupMp3Track("music", "sound/music.mp3");
+    setupMp3Track("rain",  "sound/rain.mp3");
   }
 
   function resume() {
@@ -118,21 +111,13 @@
   function setEnvironment(env) {
     if (!initialized) return;
     const { weather, timeOfDay, rain, lantern } = env;
-    // River — always present and prominent (sound of the water)
-    ramp(layers.river.g.gain,    weather === "storm" ? 0.85 : weather === "drizzle" ? 0.62 : 0.50, 1.2);
-    ramp(layers.shimmer.g.gain,  0.08, 1.5);
-    // Wind
-    const windLvl = weather === "storm" ? 0.62 : weather === "drizzle" ? 0.26 : 0.10;
-    ramp(layers.wind.g.gain, windLvl, 1.5);
-    // Rain
-    const rainHi = !rain ? 0 : (weather === "storm" ? 0.55 : weather === "drizzle" ? 0.26 : 0);
-    const rainLo = !rain ? 0 : (weather === "storm" ? 0.40 : weather === "drizzle" ? 0.14 : 0);
-    ramp(layers.rain.g.gain,    rainHi, 1.2);
-    ramp(layers.rainLow.g.gain, rainLo, 1.2);
-    // Crickets — night only & calm weather
-    ramp(layers.crickets.g.gain, (timeOfDay === "night" && weather === "clear") ? 0.08 : 0, 1.6);
-    // Lantern flame
-    ramp(layers.flame.g.gain, lantern ? 0.06 : 0, 1.0);
+
+    // Background music — always on
+    setMp3Gain("music", 0.4);
+
+    // Rain MP3 — quiet drizzle, full volume in storm
+    const rainOn = rain && (weather === "storm" || weather === "drizzle");
+    setMp3Gain("rain", rainOn ? (weather === "storm" ? 0.45 : 0.15) : 0);
   }
 
   // ─── One-shot SFX ──────────────────────────────────────────────────
@@ -170,26 +155,21 @@
   }
 
   function playCast() {
-    // Rod whoosh — bandpassed noise sweeping up
     noise({ dur: 0.35, peak: 0.32, filt: { type: "bandpass", Q: 3 },
             freqStart: 380, freqEnd: 2600 });
-    // Reel-out tick
     osc({ type: "sawtooth", freq: 1400, dur: 0.05, peak: 0.06, delay: 0.05 });
   }
 
   function playSplash(intensity = 1) {
-    // Splash — wide noise sweep
     noise({ dur: 0.55, peak: 0.42 * intensity, filt: { type: "lowpass", Q: 0.7 },
             freqStart: 2600, freqEnd: 380 });
-    // Sub thunk
     osc({ type: "sine", freq: 130, freqEnd: 50, dur: 0.22, peak: 0.32 * intensity });
-    // Bubbles after
     osc({ type: "sine", freq: 800, freqEnd: 1400, dur: 0.18, peak: 0.05, delay: 0.15 });
     osc({ type: "sine", freq: 600, freqEnd: 1100, dur: 0.16, peak: 0.04, delay: 0.22 });
   }
 
   function playBite() {
-    osc({ type: "triangle", freq: 200, freqEnd: 80, dur: 0.28, peak: 0.2 });
+    osc({ type: "triangle", freq: 200, freqEnd: 80,  dur: 0.28, peak: 0.2 });
     osc({ type: "sine",     freq: 380, freqEnd: 180, dur: 0.18, peak: 0.12, delay: 0.02 });
   }
 
@@ -208,6 +188,7 @@
     src.start(t); lfo.start(t);
     reelNode = { src, g, lfo };
   }
+
   function stopReel() {
     if (!reelNode || !initialized) return;
     const t = ctx.currentTime;
@@ -220,18 +201,14 @@
   }
 
   function playCatch() {
-    // Wet breach
     playSplash(0.9);
-    // Flop slap
     setTimeout(() => {
-      osc({ type: "sine", freq: 240, freqEnd: 90, dur: 0.16, peak: 0.26 });
-      osc({ type: "triangle", freq: 420, freqEnd: 180, dur: 0.1, peak: 0.12, delay: 0.05 });
+      osc({ type: "sine",     freq: 240, freqEnd: 90,  dur: 0.16, peak: 0.26 });
+      osc({ type: "triangle", freq: 420, freqEnd: 180, dur: 0.1,  peak: 0.12, delay: 0.05 });
     }, 90);
   }
 
   function playEliminate() {
-    // 3-note descending tone with a subtle sub thud
-    const t = ctx.currentTime;
     [560, 410, 260].forEach((f, i) => {
       osc({ type: "triangle", freq: f, freqEnd: f * 0.95, dur: 0.18,
             peak: 0.18, delay: i * 0.085 });
@@ -240,12 +217,10 @@
   }
 
   function playWin() {
-    // C major arpeggio + brass pad
     const notes = [261.63, 329.63, 392, 523.25, 659.25, 784];
     notes.forEach((f, i) => {
       osc({ type: "sawtooth", freq: f, dur: 0.55, peak: 0.16, delay: i * 0.11 });
     });
-    // Sustained chord (root, third, fifth, octave) with lowpass for warmth
     [261.63, 329.63, 392, 523.25].forEach((f) => {
       const o = ctx.createOscillator(); o.type = "sine"; o.frequency.value = f;
       const filt = ctx.createBiquadFilter(); filt.type = "lowpass"; filt.frequency.value = 1500;
@@ -256,42 +231,25 @@
       g.gain.exponentialRampToValueAtTime(0.0001, t + 3.2);
       o.start(t); o.stop(t + 3.3);
     });
-    // Crowd-ish noise swell
     noise({ dur: 2.0, peak: 0.08, filt: { type: "bandpass", Q: 0.6 },
             freqStart: 1200, freqEnd: 1200, attack: 0.6, delay: 0.2 });
   }
 
-  function playThunder() {
-    if (!initialized) return;
-    // Initial crack
-    noise({ dur: 0.32, peak: 0.4, filt: { type: "bandpass", Q: 2 },
-            freqStart: 2400, freqEnd: 800 });
-    // Long rumble
-    const src = ctx.createBufferSource(); src.buffer = makeNoise(3.2, "brown");
-    const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 700; f.Q.value = 0.5;
-    const g = ctx.createGain(); g.gain.value = 0;
-    src.connect(f).connect(g).connect(sfxGain);
-    const t = ctx.currentTime + 0.1;
-    g.gain.setValueAtTime(0, t);
-    g.gain.linearRampToValueAtTime(0.55, t + 0.15);
-    g.gain.linearRampToValueAtTime(0.35, t + 1.0);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + 3.0);
-    f.frequency.setValueAtTime(700, t);
-    f.frequency.exponentialRampToValueAtTime(110, t + 2.5);
-    src.start(t); src.stop(t + 3.3);
-  }
+  function playThunder() {}
 
   // ─── Volume / mute ─────────────────────────────────────────────────
   function setVolume(v) {
     masterLevel = Math.max(0, Math.min(1, v));
     if (!initialized || muted) return;
     ramp(master.gain, masterLevel, 0.2);
+    Object.keys(mp3).forEach(applyMp3Volume);
   }
 
   function setMuted(m) {
     muted = m;
     if (!initialized) return;
     ramp(master.gain, m ? 0 : masterLevel, 0.2);
+    Object.keys(mp3).forEach(applyMp3Volume);
   }
 
   window.fishAudio = {
