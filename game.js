@@ -1512,94 +1512,109 @@ function drawHook(ctx, x, y, hooked) {
   // Shank runs downward, bends into a J, point rises back up with barb.
   // Bait hangs on a hair rig below the bend.
 
-  // ── Hair rig filament (draw first, behind everything) ────────────
-  // Thin nylon from bend base down to bait
+  // ── Hair rig filament ────────────────────────────────────────────
   const hairTopX = 4, hairTopY = 22;
-  const baitR = hooked ? 9 : 11;   // bait squishes slightly when bitten
+  const baitR = 8;
   const bx = hairTopX, by = hairTopY + baitR + 3;
 
-  ctx.strokeStyle = "rgba(220,230,240,.70)";
-  ctx.lineWidth = 0.7;
-  ctx.lineCap = "round";
-  ctx.beginPath();
-  ctx.moveTo(hairTopX, hairTopY);
-  ctx.lineTo(bx, by - baitR);
-  ctx.stroke();
-
-  // ── Bait boilie hanging on hair ──────────────────────────────────
-  // Drop shadow
-  ctx.save();
-  ctx.globalAlpha = 0.28;
-  ctx.fillStyle = "#000";
-  ctx.beginPath();
-  ctx.ellipse(bx + 2, by + baitR - 1, baitR * 0.85, baitR * 0.28, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Outer wet glow
-  ctx.save();
-  ctx.globalAlpha = hooked ? 0.25 : 0.45;
-  const glow = ctx.createRadialGradient(bx, by, baitR * 0.3, bx, by, baitR * 2.0);
-  glow.addColorStop(0, "rgba(255,80,30,.65)");
-  glow.addColorStop(1, "rgba(255,80,30,0)");
-  ctx.fillStyle = glow;
-  ctx.beginPath();
-  ctx.arc(bx, by, baitR * 2.0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
-
-  // Main sphere — squished vertically when hooked (being eaten)
-  const scaleY = hooked ? 0.82 : 1.0;
-  ctx.save();
-  ctx.translate(bx, by);
-  ctx.scale(1, scaleY);
-  const baitG = ctx.createRadialGradient(
-    -baitR * 0.38, -baitR * 0.42, baitR * 0.12,
-    0, 0, baitR * 1.05,
-  );
-  baitG.addColorStop(0,   hooked ? "#ffa060" : "#ff8a40");
-  baitG.addColorStop(0.4, hooked ? "#e03818" : "#d42e10");
-  baitG.addColorStop(1.0, "#7a1006");
-  ctx.fillStyle = baitG;
-  ctx.beginPath();
-  ctx.arc(0, 0, baitR, 0, Math.PI * 2);
-  ctx.fill();
-  // Speckle texture
-  ctx.fillStyle = "rgba(100,14,4,.40)";
-  for (let i = 0; i < 9; i++) {
-    const a = ((i * 73 + 17) % 360) * Math.PI / 180;
-    const r = baitR * (0.28 + (i % 3) * 0.2);
+  if (!hooked) {
+    // filament only visible when bait is free
+    ctx.strokeStyle = "rgba(220,230,240,.70)";
+    ctx.lineWidth = 0.7;
+    ctx.lineCap = "round";
     ctx.beginPath();
-    ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 0.85, 0, Math.PI * 2);
+    ctx.moveTo(hairTopX, hairTopY);
+    ctx.lineTo(bx, by - baitR);
+    ctx.stroke();
+
+    // ── Bait boilie hanging on hair ────────────────────────────────
+    ctx.save();
+    ctx.globalAlpha = 0.28;
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.ellipse(bx + 2, by + baitR - 1, baitR * 0.85, baitR * 0.28, 0, 0, Math.PI * 2);
     ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha = 0.45;
+    const glow = ctx.createRadialGradient(bx, by, baitR * 0.3, bx, by, baitR * 1.8);
+    glow.addColorStop(0, "rgba(255,80,30,.65)");
+    glow.addColorStop(1, "rgba(255,80,30,0)");
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(bx, by, baitR * 1.8, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(bx, by);
+    const baitG = ctx.createRadialGradient(-baitR * 0.38, -baitR * 0.42, baitR * 0.1, 0, 0, baitR * 1.05);
+    baitG.addColorStop(0,   "#ff8a40");
+    baitG.addColorStop(0.4, "#d42e10");
+    baitG.addColorStop(1.0, "#7a1006");
+    ctx.fillStyle = baitG;
+    ctx.beginPath();
+    ctx.arc(0, 0, baitR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(100,14,4,.38)";
+    for (let i = 0; i < 9; i++) {
+      const a = ((i * 73 + 17) % 360) * Math.PI / 180;
+      const r = baitR * (0.28 + (i % 3) * 0.2);
+      ctx.beginPath();
+      ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 0.8, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.fillStyle = "rgba(255,248,225,.88)";
+    ctx.beginPath();
+    ctx.ellipse(-baitR * 0.38, -baitR * 0.42, baitR * 0.28, baitR * 0.17, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(70,6,2,.40)";
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    ctx.arc(0, 0, baitR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+
+  } else {
+    // ── Fish mouth engulfing the hook ───────────────────────────────
+    // Draw a carp mouth (rounded lips) replacing the bait area
+    const mx = bx, my = by - 2;
+    // Throat / mouth interior — dark pink cavity
+    ctx.fillStyle = "#a83040";
+    ctx.beginPath();
+    ctx.ellipse(mx, my, 13, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Inner cavity darker center
+    const throatG = ctx.createRadialGradient(mx, my + 2, 1, mx, my, 12);
+    throatG.addColorStop(0, "rgba(60,10,15,.85)");
+    throatG.addColorStop(1, "rgba(140,40,50,.0)");
+    ctx.fillStyle = throatG;
+    ctx.beginPath();
+    ctx.ellipse(mx, my, 13, 9, 0, 0, Math.PI * 2);
+    ctx.fill();
+    // Upper lip
+    ctx.fillStyle = "#c07848";
+    ctx.beginPath();
+    ctx.ellipse(mx, my - 6, 14, 5, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+    // Lower lip
+    ctx.fillStyle = "#b06838";
+    ctx.beginPath();
+    ctx.ellipse(mx, my + 6, 14, 5, 0, 0, Math.PI);
+    ctx.fill();
+    // Lip highlight
+    ctx.fillStyle = "rgba(255,220,160,.35)";
+    ctx.beginPath();
+    ctx.ellipse(mx - 3, my - 7, 6, 2, -0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // Lip outline
+    ctx.strokeStyle = "rgba(80,30,10,.60)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    ctx.ellipse(mx, my, 14, 9.5, 0, 0, Math.PI * 2);
+    ctx.stroke();
   }
-  // Specular highlight
-  ctx.fillStyle = "rgba(255,248,225,.88)";
-  ctx.beginPath();
-  ctx.ellipse(-baitR * 0.38, -baitR * 0.42, baitR * 0.28, baitR * 0.17, -0.5, 0, Math.PI * 2);
-  ctx.fill();
-  // Secondary soft highlight
-  ctx.fillStyle = "rgba(255,235,200,.40)";
-  ctx.beginPath();
-  ctx.arc(baitR * 0.22, -baitR * 0.55, baitR * 0.1, 0, Math.PI * 2);
-  ctx.fill();
-  // Bite marks when hooked — two darker dents at top
-  if (hooked) {
-    ctx.fillStyle = "rgba(60,8,2,.55)";
-    ctx.beginPath();
-    ctx.ellipse(-baitR * 0.25, -baitR * 0.78, 2.5, 1.6, -0.4, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.beginPath();
-    ctx.ellipse(baitR * 0.28, -baitR * 0.72, 2.2, 1.5, 0.4, 0, Math.PI * 2);
-    ctx.fill();
-  }
-  // Outline
-  ctx.strokeStyle = "rgba(70,6,2,.45)";
-  ctx.lineWidth = 0.65;
-  ctx.beginPath();
-  ctx.arc(0, 0, baitR, 0, Math.PI * 2);
-  ctx.stroke();
-  ctx.restore();
 
   // ── Hook metal (drawn over shadow, behind/over bait sides) ───────
   // Chrome-steel look: bright stroke with a dark shadow pass
