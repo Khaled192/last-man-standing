@@ -2004,7 +2004,7 @@ function App() {
           const dx = rodTip.x - hk.x,
             dy = rodTip.y - hk.y,
             d = Math.hypot(dx, dy);
-          if (d < 6) {
+          if (d < 30) {
             if (hk.hooked) {
               const sp = hk.hooked;
               s.fish = s.fish.filter((f) => f !== sp);
@@ -2047,7 +2047,7 @@ function App() {
             if (hk.hooked) {
               hk.hooked.x = hk.x;
               hk.hooked.y = hk.y;
-              if (d > 20) hk.hooked.heading = Math.atan2(dy, dx);
+              if (d > 50) hk.hooked.heading = Math.atan2(dy, dx);
             }
           }
         }
