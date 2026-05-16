@@ -237,7 +237,7 @@ function TweaksPanel({
   };
   const offsetRef = React.useRef({
     x: 16,
-    y: 16
+    y: 70
   });
   const PAD = 16;
   const clampToViewport = React.useCallback(() => {

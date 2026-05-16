@@ -1712,6 +1712,17 @@ function App() {
     reader.readAsBinaryString(file);
   }, []);
 
+  useEffect(() => {
+    const handler = (e) => {
+      if (started && !winner) {
+        e.preventDefault();
+        e.returnValue = "";
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [started, winner]);
+
   // Load logo + bait branding image
   useEffect(() => {
     const img = new Image();
@@ -2023,7 +2034,6 @@ function App() {
               hk.hooked.x = hk.x;
               hk.hooked.y = hk.y;
               hk.hooked.heading = Math.atan2(dy, dx);
-              hk.hooked.phase += dt * 12;
             }
           }
         }
@@ -2637,11 +2647,6 @@ function App() {
         value: t.showNames,
         onChange: (v) => setTweak("showNames", v),
       }),
-      /*#__PURE__*/ React.createElement(TweakToggle, {
-        label: "Schooling",
-        value: t.schoolBehavior,
-        onChange: (v) => setTweak("schoolBehavior", v),
-      }),
       /*#__PURE__*/ React.createElement(TweakSection, {
         label: "Atmosphere",
       }),
@@ -2678,21 +2683,10 @@ function App() {
       /*#__PURE__*/ React.createElement(TweakSection, {
         label: "River",
       }),
-      /*#__PURE__*/ React.createElement(TweakRadio, {
-        label: "Depth",
-        value: t.waterDepth,
-        options: ["shallow", "deep", "very-deep"],
-        onChange: (v) => setTweak("waterDepth", v),
-      }),
       /*#__PURE__*/ React.createElement(TweakToggle, {
         label: "Boat drift",
         value: t.boatDrift,
         onChange: (v) => setTweak("boatDrift", v),
-      }),
-      /*#__PURE__*/ React.createElement(TweakToggle, {
-        label: "Show hitboxes",
-        value: t.showFishOutline,
-        onChange: (v) => setTweak("showFishOutline", v),
       }),
     ),
   );
