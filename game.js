@@ -188,7 +188,22 @@ const GRAY_CARP = {
   size: [30, 40],
 };
 
-const ALL_SPECIES = [CARP, BLACK_CARP, KOI_CARP, GRASS_CARP, GRAY_CARP];
+const KOHAKU_KOI = {
+  name: "Kohaku Koi",
+  back: "#c81808",
+  body: "#e04838",
+  flank: "#f5b0a0",
+  bellyHi: "#ffffff",
+  belly: "#f8f0ee",
+  fin: "#ecd8d4",
+  finRed: "#c82010",
+  finEdge: "#a01008",
+  scale: "rgba(180,24,8,.28)",
+  scaleHi: "rgba(255,255,255,.55)",
+  size: [28, 36],
+};
+
+const ALL_SPECIES = [CARP, BLACK_CARP, KOI_CARP, GRASS_CARP, GRAY_CARP, KOHAKU_KOI];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Fish — spine-driven body, multiple fins, smooth physics
