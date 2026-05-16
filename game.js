@@ -1508,138 +1508,134 @@ function drawLine(ctx, x1, y1, x2, y2, tension) {
 function drawHook(ctx, x, y, hooked) {
   ctx.save();
   ctx.translate(x, y);
-  // Larger, more prominent hook with red "berry bomb" boilie bait.
-  // Hook is steel/chrome; bait is a wet, glossy red-orange ball.
+  // Hook eye sits at (0,0) — this is where the fishing line attaches.
+  // Shank runs downward, bends into a J, point rises back up with barb.
+  // Bait hangs on a hair rig below the bend.
 
-  // Soft drop-shadow under the bait
-  ctx.save();
-  ctx.globalAlpha = 0.35;
-  ctx.fillStyle = "#000";
-  ctx.beginPath();
-  ctx.ellipse(0, 12, 12, 4, 0, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.restore();
+  // ── Hair rig filament (draw first, behind everything) ────────────
+  // Thin nylon from bend base down to bait
+  const hairTopX = 4, hairTopY = 22;
+  const baitR = hooked ? 9 : 11;   // bait squishes slightly when bitten
+  const bx = hairTopX, by = hairTopY + baitR + 3;
 
-  // Hook shank + bend + barb (drawn behind the bait)
-  ctx.strokeStyle = "#e8edf2";
-  ctx.lineWidth = 2.6;
+  ctx.strokeStyle = "rgba(220,230,240,.70)";
+  ctx.lineWidth = 0.7;
   ctx.lineCap = "round";
   ctx.beginPath();
-  // shank rises from above-bait, curves around the right and down to the point
-  ctx.moveTo(2, -16);
-  ctx.quadraticCurveTo(7, -6, 8, 4);
-  ctx.quadraticCurveTo(8, 14, -1, 14);
-  ctx.quadraticCurveTo(-9, 14, -9, 6);
-  ctx.stroke();
-  // Hook point + barb
-  ctx.beginPath();
-  ctx.moveTo(-9, 6);
-  ctx.lineTo(-9, -3); // point rising
-  ctx.moveTo(-9, 1);
-  ctx.lineTo(-13, 4); // barb
-  ctx.lineWidth = 2.2;
-  ctx.stroke();
-  // Eye loop at top of shank
-  ctx.lineWidth = 1.8;
-  ctx.beginPath();
-  ctx.arc(2, -18, 3, 0, Math.PI * 2);
-  ctx.stroke();
-  // Dark inner shading on hook for contrast
-  ctx.strokeStyle = "rgba(20,28,40,.55)";
-  ctx.lineWidth = 1;
-  ctx.beginPath();
-  ctx.moveTo(2, -16);
-  ctx.quadraticCurveTo(7, -6, 8, 4);
-  ctx.quadraticCurveTo(8, 14, -1, 14);
-  ctx.quadraticCurveTo(-9, 14, -9, 6);
+  ctx.moveTo(hairTopX, hairTopY);
+  ctx.lineTo(bx, by - baitR);
   ctx.stroke();
 
-  // Bait — large red boilie (15mm-ish) sitting on the bend
-  const baitR = 11;
-  const bx = 0,
-    by = 2;
-  // Outer glow / wetness
+  // ── Bait boilie hanging on hair ──────────────────────────────────
+  // Drop shadow
   ctx.save();
-  ctx.globalAlpha = 0.55;
-  const glow = ctx.createRadialGradient(
-    bx,
-    by,
-    baitR * 0.4,
-    bx,
-    by,
-    baitR * 2.2,
-  );
-  glow.addColorStop(0, "rgba(255,90,40,.6)");
-  glow.addColorStop(1, "rgba(255,90,40,0)");
-  ctx.fillStyle = glow;
+  ctx.globalAlpha = 0.28;
+  ctx.fillStyle = "#000";
   ctx.beginPath();
-  ctx.arc(bx, by, baitR * 2.2, 0, Math.PI * 2);
+  ctx.ellipse(bx + 2, by + baitR - 1, baitR * 0.85, baitR * 0.28, 0, 0, Math.PI * 2);
   ctx.fill();
   ctx.restore();
-  // Base sphere with radial gradient (red-orange)
+
+  // Outer wet glow
+  ctx.save();
+  ctx.globalAlpha = hooked ? 0.25 : 0.45;
+  const glow = ctx.createRadialGradient(bx, by, baitR * 0.3, bx, by, baitR * 2.0);
+  glow.addColorStop(0, "rgba(255,80,30,.65)");
+  glow.addColorStop(1, "rgba(255,80,30,0)");
+  ctx.fillStyle = glow;
+  ctx.beginPath();
+  ctx.arc(bx, by, baitR * 2.0, 0, Math.PI * 2);
+  ctx.fill();
+  ctx.restore();
+
+  // Main sphere — squished vertically when hooked (being eaten)
+  const scaleY = hooked ? 0.82 : 1.0;
+  ctx.save();
+  ctx.translate(bx, by);
+  ctx.scale(1, scaleY);
   const baitG = ctx.createRadialGradient(
-    bx - baitR * 0.4,
-    by - baitR * 0.5,
-    baitR * 0.2,
-    bx,
-    by,
-    baitR * 1.1,
+    -baitR * 0.38, -baitR * 0.42, baitR * 0.12,
+    0, 0, baitR * 1.05,
   );
-  baitG.addColorStop(0, hooked ? "#ffb878" : "#ff8a48");
-  baitG.addColorStop(0.45, hooked ? "#ff5028" : "#e23a18");
-  baitG.addColorStop(1.0, "#8a1808");
+  baitG.addColorStop(0,   hooked ? "#ffa060" : "#ff8a40");
+  baitG.addColorStop(0.4, hooked ? "#e03818" : "#d42e10");
+  baitG.addColorStop(1.0, "#7a1006");
   ctx.fillStyle = baitG;
   ctx.beginPath();
-  ctx.arc(bx, by, baitR, 0, Math.PI * 2);
+  ctx.arc(0, 0, baitR, 0, Math.PI * 2);
   ctx.fill();
-  // Texture: tiny darker speckles (berry crumb)
-  ctx.fillStyle = "rgba(120,20,8,.45)";
-  const seed = ((bx + 13) * 37) | 0;
+  // Speckle texture
+  ctx.fillStyle = "rgba(100,14,4,.40)";
   for (let i = 0; i < 9; i++) {
-    const a = (((seed + i * 73) % 360) * Math.PI) / 180;
-    const r = (baitR - 2) * ((i % 3) * 0.25 + 0.3);
+    const a = ((i * 73 + 17) % 360) * Math.PI / 180;
+    const r = baitR * (0.28 + (i % 3) * 0.2);
     ctx.beginPath();
-    ctx.arc(bx + Math.cos(a) * r, by + Math.sin(a) * r, 0.9, 0, Math.PI * 2);
+    ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 0.85, 0, Math.PI * 2);
     ctx.fill();
   }
-  // Tiny brighter flecks
-  ctx.fillStyle = "rgba(255,200,140,.55)";
-  for (let i = 0; i < 6; i++) {
-    const a = (((seed + i * 119) % 360) * Math.PI) / 180;
-    const r = (baitR - 3) * 0.5;
+  // Specular highlight
+  ctx.fillStyle = "rgba(255,248,225,.88)";
+  ctx.beginPath();
+  ctx.ellipse(-baitR * 0.38, -baitR * 0.42, baitR * 0.28, baitR * 0.17, -0.5, 0, Math.PI * 2);
+  ctx.fill();
+  // Secondary soft highlight
+  ctx.fillStyle = "rgba(255,235,200,.40)";
+  ctx.beginPath();
+  ctx.arc(baitR * 0.22, -baitR * 0.55, baitR * 0.1, 0, Math.PI * 2);
+  ctx.fill();
+  // Bite marks when hooked — two darker dents at top
+  if (hooked) {
+    ctx.fillStyle = "rgba(60,8,2,.55)";
     ctx.beginPath();
-    ctx.arc(bx + Math.cos(a) * r, by + Math.sin(a) * r, 0.7, 0, Math.PI * 2);
+    ctx.ellipse(-baitR * 0.25, -baitR * 0.78, 2.5, 1.6, -0.4, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(baitR * 0.28, -baitR * 0.72, 2.2, 1.5, 0.4, 0, Math.PI * 2);
     ctx.fill();
   }
-  // Specular highlight (top-left)
-  ctx.fillStyle = "rgba(255,250,230,.85)";
-  ctx.beginPath();
-  ctx.ellipse(
-    bx - baitR * 0.42,
-    by - baitR * 0.45,
-    baitR * 0.3,
-    baitR * 0.18,
-    -0.6,
-    0,
-    Math.PI * 2,
-  );
-  ctx.fill();
-  // Soft small secondary highlight
-  ctx.fillStyle = "rgba(255,240,210,.45)";
-  ctx.beginPath();
-  ctx.arc(bx + baitR * 0.25, by - baitR * 0.6, baitR * 0.1, 0, Math.PI * 2);
-  ctx.fill();
-  // Drip running down
-  ctx.fillStyle = "rgba(180,30,15,.7)";
-  ctx.beginPath();
-  ctx.ellipse(bx + baitR * 0.45, by + baitR * 0.7, 1.4, 2.4, 0, 0, Math.PI * 2);
-  ctx.fill();
   // Outline
-  ctx.strokeStyle = "rgba(80,8,4,.55)";
-  ctx.lineWidth = 0.7;
+  ctx.strokeStyle = "rgba(70,6,2,.45)";
+  ctx.lineWidth = 0.65;
   ctx.beginPath();
-  ctx.arc(bx, by, baitR, 0, Math.PI * 2);
+  ctx.arc(0, 0, baitR, 0, Math.PI * 2);
   ctx.stroke();
+  ctx.restore();
+
+  // ── Hook metal (drawn over shadow, behind/over bait sides) ───────
+  // Chrome-steel look: bright stroke with a dark shadow pass
+  const hookColor = "#dde4ec";
+  const hookShadow = "rgba(18,26,38,.60)";
+
+  // Draw the J shape twice: shadow then highlight
+  for (let pass = 0; pass < 2; pass++) {
+    ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
+    ctx.lineWidth = pass === 0 ? 3.8 : 2.4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    // Shank: straight down from just below eye
+    ctx.moveTo(0, 3);
+    ctx.lineTo(0, 16);
+    // Bend: curve sweeping right then back up
+    ctx.bezierCurveTo(0, 24, 14, 26, 14, 16);
+    ctx.lineTo(14, 8);   // point rising back up inside
+    ctx.stroke();
+    // Barb — small notch off the point
+    ctx.beginPath();
+    ctx.moveTo(14, 12);
+    ctx.lineTo(10, 9);
+    ctx.stroke();
+  }
+
+  // Eye loop at very top — this is where the fishing line ties on
+  for (let pass = 0; pass < 2; pass++) {
+    ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
+    ctx.lineWidth = pass === 0 ? 3.2 : 1.9;
+    ctx.beginPath();
+    ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+
   ctx.restore();
 }
 function drawSplash(ctx, x, y, age) {
