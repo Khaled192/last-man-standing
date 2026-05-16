@@ -113,42 +113,93 @@ const PALETTES = {
   },
 };
 
-// Common carp — only species. Olive-brown back, brassy gold flanks, silvery belly,
-// reddish-orange lower fins, very long dorsal, forked dusky tail.
 const CARP = {
   name: "Common Carp",
   back: "#4a3a18",
-  // dark olive back
   body: "#9c7a30",
-  // brassy gold flank
   flank: "#caa056",
-  // lighter golden flank highlight
   bellyHi: "#f4eede",
-  // silvery-cream belly highlight
   belly: "#dcd2b6",
-  // silvery-cream belly
   fin: "#7a5a32",
-  // olive-brown top fins (dorsal, tail)
   finRed: "#10351c",
-  // reddish-orange lower fins (pectoral, anal, pelvic)
   finEdge: "#3a2418",
   scale: "rgba(20,12,4,.40)",
   scaleHi: "rgba(255,240,200,.22)",
-  // size: [22, 29],
   size: [32, 39],
 };
+
+const BLACK_CARP = {
+  name: "Black Carp",
+  back: "#0e0e0e",
+  body: "#252525",
+  flank: "#3c3c3c",
+  bellyHi: "#7a7a7a",
+  belly: "#585858",
+  fin: "#181818",
+  finRed: "#202020",
+  finEdge: "#080808",
+  scale: "rgba(0,0,0,.55)",
+  scaleHi: "rgba(160,160,160,.18)",
+  size: [34, 44],
+};
+
+const KOI_CARP = {
+  name: "Wild Koi",
+  back: "#c04018",
+  body: "#e06828",
+  flank: "#f0a050",
+  bellyHi: "#fff8f0",
+  belly: "#f5e0c8",
+  fin: "#b83010",
+  finRed: "#d85030",
+  finEdge: "#882010",
+  scale: "rgba(140,38,8,.32)",
+  scaleHi: "rgba(255,215,170,.28)",
+  size: [28, 36],
+};
+
+const GRASS_CARP = {
+  name: "Grass Carp",
+  back: "#2e3e1a",
+  body: "#506030",
+  flank: "#7a9050",
+  bellyHi: "#e8e8d4",
+  belly: "#c0c0a8",
+  fin: "#405028",
+  finRed: "#607040",
+  finEdge: "#202e10",
+  scale: "rgba(28,38,12,.38)",
+  scaleHi: "rgba(190,215,145,.20)",
+  size: [36, 46],
+};
+
+const GRAY_CARP = {
+  name: "Gray Carp",
+  back: "#3a3a44",
+  body: "#6a6a78",
+  flank: "#a0a0b4",
+  bellyHi: "#f0f0f5",
+  belly: "#d0d0dc",
+  fin: "#484858",
+  finRed: "#686878",
+  finEdge: "#282830",
+  scale: "rgba(18,18,28,.38)",
+  scaleHi: "rgba(210,210,235,.24)",
+  size: [30, 40],
+};
+
+const ALL_SPECIES = [CARP, BLACK_CARP, KOI_CARP, GRASS_CARP, GRAY_CARP];
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Fish — spine-driven body, multiple fins, smooth physics
 
 class Fish {
   constructor(W, H, surfaceY, depth, name) {
-    this.species = CARP;
+    this.species = ALL_SPECIES[Math.floor(Math.random() * ALL_SPECIES.length)];
     this.name = name;
-    // Slight per-fish size variation so individuals read different
-    const [smin, smax] = CARP.size;
+    const [smin, smax] = this.species.size;
     this.length = smin + Math.random() * (smax - smin);
-    this.bodyH = this.length * 0.34; // chunkier carp profile
+    this.bodyH = this.length * 0.34;
     // Spawn anywhere across the full width — some start off-screen so they can swim in
     this.x = -120 + Math.random() * (W + 240);
     this.y = surfaceY + 40 + Math.random() * (depth - 60);
