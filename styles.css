@@ -68,6 +68,27 @@ canvas{display:block;width:100%;height:100%;cursor:crosshair;image-rendering:aut
   font-size:13px;letter-spacing:0}
 @keyframes slideIn{from{opacity:0;transform:translateX(-8px)}to{opacity:1}}
 
+/* ── Exit confirmation modal ─────────────────────────────────────── */
+.exit-modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);
+  backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  display:flex;align-items:center;justify-content:center;z-index:100}
+.exit-modal{background:#f6efe2;color:#1b1410;border-radius:18px;
+  padding:36px 40px;max-width:360px;width:90%;text-align:center;
+  box-shadow:0 24px 64px rgba(0,0,0,.4)}
+.exit-modal h2{font-family:"Fraunces",serif;font-weight:700;font-size:26px;
+  margin:0 0 12px}
+.exit-modal p{font-size:13px;line-height:1.6;color:rgba(27,20,16,.7);margin:0 0 28px}
+.exit-modal-btns{display:flex;gap:12px}
+.exit-stay{flex:1;appearance:none;border:0;border-radius:10px;padding:14px;
+  background:#1b1410;color:#f6efe2;font-family:"JetBrains Mono",monospace;
+  font-size:11px;letter-spacing:.2em;text-transform:uppercase;cursor:pointer}
+.exit-stay:hover{background:#2a1f18}
+.exit-leave{flex:1;appearance:none;border:1.5px solid rgba(27,20,16,.2);
+  border-radius:10px;padding:14px;background:transparent;color:rgba(27,20,16,.6);
+  font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.2em;
+  text-transform:uppercase;cursor:pointer}
+.exit-leave:hover{background:rgba(27,20,16,.06);color:#1b1410}
+
 /* ── Catch flash overlay ─────────────────────────────────────────── */
 .catch-flash{position:fixed;inset:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;pointer-events:none;z-index:20;

@@ -1712,6 +1712,8 @@ function App() {
     reader.readAsBinaryString(file);
   }, []);
 
+  const [exitModal, setExitModal] = useState(false);
+
   useEffect(() => {
     const handler = (e) => {
       if (started && !winner) {
@@ -1719,8 +1721,20 @@ function App() {
         e.returnValue = "";
       }
     };
+    const keyHandler = (e) => {
+      if (!started || winner) return;
+      const isReload = e.key === "F5" || ((e.ctrlKey || e.metaKey) && e.key === "r");
+      if (isReload) {
+        e.preventDefault();
+        setExitModal(true);
+      }
+    };
     window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
+    window.addEventListener("keydown", keyHandler);
+    return () => {
+      window.removeEventListener("beforeunload", handler);
+      window.removeEventListener("keydown", keyHandler);
+    };
   }, [started, winner]);
 
   // Load logo + bait branding image
@@ -2033,7 +2047,7 @@ function App() {
             if (hk.hooked) {
               hk.hooked.x = hk.x;
               hk.hooked.y = hk.y;
-              hk.hooked.heading = Math.atan2(dy, dx);
+              if (d > 20) hk.hooked.heading = Math.atan2(dy, dx);
             }
           }
         }
@@ -2291,6 +2305,31 @@ function App() {
         { className: "catch-flash" },
         /*#__PURE__*/ React.createElement("span", { className: "catch-flash-label" }, "Caught"),
         /*#__PURE__*/ React.createElement("span", { className: "catch-flash-name" }, catchFlash),
+      ),
+    exitModal &&
+      /*#__PURE__*/ React.createElement(
+        "div",
+        { className: "exit-modal-overlay" },
+        /*#__PURE__*/ React.createElement(
+          "div",
+          { className: "exit-modal" },
+          /*#__PURE__*/ React.createElement("h2", null, "Leave the tournament?"),
+          /*#__PURE__*/ React.createElement("p", null, "You will lose all your current progress."),
+          /*#__PURE__*/ React.createElement(
+            "div",
+            { className: "exit-modal-btns" },
+            /*#__PURE__*/ React.createElement(
+              "button",
+              { className: "exit-stay", onClick: () => setExitModal(false) },
+              "Stay"
+            ),
+            /*#__PURE__*/ React.createElement(
+              "button",
+              { className: "exit-leave", onClick: () => location.reload() },
+              "Leave"
+            ),
+          ),
+        ),
       ),
     /*#__PURE__*/ React.createElement(
       "div",
