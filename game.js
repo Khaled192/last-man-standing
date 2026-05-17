@@ -117,7 +117,7 @@ const ALL_SPECIES = [
   {
     name: "Common",
     rarity: 0.28,
-    size: [36, 49],
+    size: [40, 54],
     back: "#3a2810",
     body: "#6a5028",
     flank: "#9a7040",
@@ -132,7 +132,7 @@ const ALL_SPECIES = [
   {
     name: "Sanke",
     rarity: 0.16,
-    size: [40, 52],
+    size: [44, 57],
     back: "#c8c0aa",
     body: "#ece4d0",
     flank: "#f4f0e4",
@@ -148,7 +148,7 @@ const ALL_SPECIES = [
   {
     name: "Ogon",
     rarity: 0.16,
-    size: [37, 50],
+    size: [41, 55],
     back: "#8a6010",
     body: "#c89028",
     flank: "#e0ac40",
@@ -163,7 +163,7 @@ const ALL_SPECIES = [
   {
     name: "Kohaku",
     rarity: 0.14,
-    size: [38, 52],
+    size: [42, 57],
     back: "#c8c0aa",
     body: "#ece4d0",
     flank: "#f4f0e4",
@@ -179,7 +179,7 @@ const ALL_SPECIES = [
   {
     name: "Mirror",
     rarity: 0.1,
-    size: [42, 55],
+    size: [46, 61],
     back: "#1e1810",
     body: "#3a3028",
     flank: "#4a3c2c",
@@ -195,7 +195,7 @@ const ALL_SPECIES = [
   {
     name: "Black",
     rarity: 0.08,
-    size: [43, 58],
+    size: [47, 64],
     back: "#0c080c",
     body: "#181214",
     flank: "#281c20",
@@ -210,7 +210,7 @@ const ALL_SPECIES = [
   {
     name: "Ghost",
     rarity: 0.05,
-    size: [40, 52],
+    size: [44, 57],
     back: "#788284",
     body: "#a8b2b4",
     flank: "#b8c0c2",
@@ -225,7 +225,7 @@ const ALL_SPECIES = [
   {
     name: "Tancho",
     rarity: 0.03,
-    size: [44, 59],
+    size: [48, 65],
     back: "#c8c0aa",
     body: "#ece4d0",
     flank: "#f4f0e4",
