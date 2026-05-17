@@ -2183,7 +2183,12 @@ function App() {
       }
       ctx.restore();
 
-      // Fish
+      // Hook (J-bend only, under fish) when a fish is hooked
+      if (s.hook && s.hook.hooked) {
+        drawHook(ctx, s.hook.x, s.hook.y, true);
+      }
+
+      // Fish — always above the J-bend
       for (const f of s.fish)
         f.draw(ctx, p, t.showFishOutline, s.lanternPos, t.showNames);
 
@@ -2206,12 +2211,11 @@ function App() {
       if (s.hook) {
         const tension = s.hook.state === "reeling" ? 1 : 0.4;
         const hooked = !!s.hook.hooked;
-        // When hooked the hook is offset so the J-bend is at hook.x/y;
-        // the eye (line end) is shifted back by the J-bend offset.
         const lineEndX = hooked ? s.hook.x - HOOK_J_OX : s.hook.x;
         const lineEndY = hooked ? s.hook.y - HOOK_J_OY : s.hook.y;
         drawLine(ctx, rodTip.x, rodTip.y, lineEndX, lineEndY, tension);
-        drawHook(ctx, s.hook.x, s.hook.y, hooked);
+        // Not hooked: draw full hook+bait above fish; hooked: already drawn under fish
+        if (!hooked) drawHook(ctx, s.hook.x, s.hook.y, false);
       } else {
         drawLine(ctx, rodTip.x, rodTip.y, rodTip.x + 2, rodTip.y + 14, 0.9);
       }
