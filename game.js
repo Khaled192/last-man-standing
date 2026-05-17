@@ -1508,155 +1508,30 @@ function drawLine(ctx, x1, y1, x2, y2, tension) {
 function drawHook(ctx, x, y, hooked) {
   ctx.save();
   ctx.translate(x, y);
-  // Hook eye sits at (0,0) — this is where the fishing line attaches.
-  // Shank runs downward, bends into a J, point rises back up with barb.
-  // Bait hangs on a hair rig below the bend.
 
-  // ── Hair rig filament ────────────────────────────────────────────
-  const hairTopX = 4, hairTopY = 22;
-  const baitR = 8;
-  const bx = hairTopX, by = hairTopY + baitR + 3;
-
-  if (!hooked) {
-    // ── Hair rig filament ─────────────────────────────────────────
-    ctx.strokeStyle = "rgba(220,230,240,.70)";
-    ctx.lineWidth = 0.7;
-    ctx.lineCap = "round";
-    ctx.beginPath();
-    ctx.moveTo(hairTopX, hairTopY);
-    ctx.lineTo(bx, by - baitR);
-    ctx.stroke();
-
-    // ── Bait boilie ───────────────────────────────────────────────
-    ctx.save();
-    ctx.globalAlpha = 0.28;
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.ellipse(bx + 2, by + baitR - 1, baitR * 0.85, baitR * 0.28, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.globalAlpha = 0.42;
-    const glow = ctx.createRadialGradient(bx, by, baitR * 0.3, bx, by, baitR * 1.8);
-    glow.addColorStop(0, "rgba(255,80,30,.65)");
-    glow.addColorStop(1, "rgba(255,80,30,0)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(bx, by, baitR * 1.8, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(bx, by);
-    const baitG = ctx.createRadialGradient(-baitR * 0.38, -baitR * 0.42, baitR * 0.1, 0, 0, baitR * 1.05);
-    baitG.addColorStop(0,   "#ff8a40");
-    baitG.addColorStop(0.4, "#d42e10");
-    baitG.addColorStop(1.0, "#7a1006");
-    ctx.fillStyle = baitG;
-    ctx.beginPath();
-    ctx.arc(0, 0, baitR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(100,14,4,.38)";
-    for (let i = 0; i < 9; i++) {
-      const a = ((i * 73 + 17) % 360) * Math.PI / 180;
-      const r = baitR * (0.28 + (i % 3) * 0.2);
-      ctx.beginPath();
-      ctx.arc(Math.cos(a) * r, Math.sin(a) * r, 0.8, 0, Math.PI * 2);
-      ctx.fill();
-    }
-    ctx.fillStyle = "rgba(255,248,225,.88)";
-    ctx.beginPath();
-    ctx.ellipse(-baitR * 0.38, -baitR * 0.42, baitR * 0.28, baitR * 0.17, -0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(70,6,2,.40)";
-    ctx.lineWidth = 0.6;
-    ctx.beginPath();
-    ctx.arc(0, 0, baitR, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
-
-  } else {
-    // ── Hooked: fish mouth around the hook — bend/point hidden inside ─
-    // J-bend interior spans roughly x=0–14, y=16–26.
-    // Mouth is centred at (6, 20). Shank exits through the upper lip.
-    // Bait and hair rig are fully swallowed — not drawn.
-    const mCx = 6, mCy = 20, mW = 16, mH = 9;
-
-    // Dark throat cavity
-    const cavityG = ctx.createRadialGradient(mCx, mCy + 2, 1, mCx, mCy, mW);
-    cavityG.addColorStop(0,   "rgba(16,3,4,1)");
-    cavityG.addColorStop(0.55,"rgba(55,12,8,.92)");
-    cavityG.addColorStop(1,   "rgba(100,28,18,0)");
-    ctx.fillStyle = cavityG;
-    ctx.beginPath();
-    ctx.ellipse(mCx, mCy, mW, mH, 0, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Lower lip
-    ctx.fillStyle = "#b8683a";
-    ctx.beginPath();
-    ctx.ellipse(mCx, mCy + mH * 0.45, mW + 3, mH * 0.75, 0, 0, Math.PI);
-    ctx.fill();
-
-    // Upper lip
-    ctx.fillStyle = "#cc7e42";
-    ctx.beginPath();
-    ctx.ellipse(mCx, mCy - mH * 0.45, mW + 3, mH * 0.75, 0, Math.PI, Math.PI * 2);
-    ctx.fill();
-
-    // Lip highlight
-    ctx.fillStyle = "rgba(255,210,140,.38)";
-    ctx.beginPath();
-    ctx.ellipse(mCx - 3, mCy - mH * 0.72, 5, 2, -0.3, 0, Math.PI * 2);
-    ctx.fill();
-
-    // Lip seam
-    ctx.strokeStyle = "rgba(80,24,8,.72)";
-    ctx.lineWidth = 1.2;
-    ctx.beginPath();
-    ctx.ellipse(mCx, mCy, mW + 3, mH, 0, 0, Math.PI * 2);
-    ctx.stroke();
-  }
-
-  // ── Hook metal ────────────────────────────────────────────────────
   const hookColor = "#dde4ec";
   const hookShadow = "rgba(18,26,38,.60)";
 
-  if (hooked) {
-    // Only the shank above the mouth is visible — bend/point/barb are inside the fish.
-    // Upper lip top is at mCy - mH ≈ 11.
-    const shankEndY = 11;
-    for (let pass = 0; pass < 2; pass++) {
-      ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
-      ctx.lineWidth   = pass === 0 ? 3.8 : 2.4;
-      ctx.lineCap = "round";
-      ctx.beginPath();
-      ctx.moveTo(0, 3);
-      ctx.lineTo(0, shankEndY);
-      ctx.stroke();
-    }
-  } else {
-    // Full J-shape when bait is in the water
-    for (let pass = 0; pass < 2; pass++) {
-      ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
-      ctx.lineWidth   = pass === 0 ? 3.8 : 2.4;
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.beginPath();
-      ctx.moveTo(0, 3);
-      ctx.lineTo(0, 16);
-      ctx.bezierCurveTo(0, 24, 14, 26, 14, 16);
-      ctx.lineTo(14, 8);
-      ctx.stroke();
-      ctx.beginPath();
-      ctx.moveTo(14, 12);
-      ctx.lineTo(10, 9);
-      ctx.stroke();
-    }
+  // J-shape — shadow pass then highlight pass
+  for (let pass = 0; pass < 2; pass++) {
+    ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
+    ctx.lineWidth   = pass === 0 ? 3.8 : 2.4;
+    ctx.lineCap = "round";
+    ctx.lineJoin = "round";
+    ctx.beginPath();
+    ctx.moveTo(0, 3);
+    ctx.lineTo(0, 16);
+    ctx.bezierCurveTo(0, 24, 14, 26, 14, 16);
+    ctx.lineTo(14, 8);
+    ctx.stroke();
+    // Barb
+    ctx.beginPath();
+    ctx.moveTo(14, 12);
+    ctx.lineTo(10, 9);
+    ctx.stroke();
   }
 
-  // Eye loop at very top — fishing line ties here
+  // Eye loop at top — fishing line ties here
   for (let pass = 0; pass < 2; pass++) {
     ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
     ctx.lineWidth   = pass === 0 ? 3.2 : 1.9;
