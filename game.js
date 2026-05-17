@@ -268,8 +268,8 @@ class Fish {
       (Math.random() < 0.5 ? 0 : Math.PI) + (Math.random() - 0.5) * 0.6;
     this.speed = 0;
     // Faster movement overall
-    this.cruiseSpeed = 28 + Math.random() * 26;
-    this.maxSpeed = 130 + Math.random() * 90;
+    this.cruiseSpeed = 56 + Math.random() * 52;
+    this.maxSpeed = 260 + Math.random() * 180;
     this.turnRate = 2.2 + Math.random() * 1.6;
     this.phase = Math.random() * Math.PI * 2;
     this.swimFreq = 5 + Math.random() * 3;
