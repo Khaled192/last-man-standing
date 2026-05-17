@@ -113,104 +113,150 @@ const PALETTES = {
   },
 };
 
-const CARP = {
-  name: "Common Carp",
-  back: "#4a3a18",
-  body: "#9c7a30",
-  flank: "#caa056",
-  bellyHi: "#f4eede",
-  belly: "#dcd2b6",
-  fin: "#7a5a32",
-  finRed: "#10351c",
-  finEdge: "#3a2418",
-  scale: "rgba(20,12,4,.40)",
-  scaleHi: "rgba(255,240,200,.22)",
-  size: [32, 39],
-};
+const ALL_SPECIES = [
+  {
+    name: "Common",
+    rarity: 0.28,
+    size: [36, 49],
+    back: "#3a2810",
+    body: "#6a5028",
+    flank: "#9a7040",
+    belly: "#b89052",
+    bellyHi: "#d4b878",
+    fin: "#2c1f10",
+    finRed: "#1c1008",
+    finEdge: "#180c06",
+    scale: "rgba(0,0,0,.18)",
+    scaleHi: "rgba(180,140,80,.20)",
+  },
+  {
+    name: "Sanke",
+    rarity: 0.16,
+    size: [40, 52],
+    back: "#c8c0aa",
+    body: "#ece4d0",
+    flank: "#f4f0e4",
+    belly: "#ece4d0",
+    bellyHi: "#faf8f2",
+    fin: "#b8503a",
+    finRed: "#9c3828",
+    finEdge: "#781c10",
+    scale: "rgba(0,0,0,.10)",
+    scaleHi: "rgba(255,255,255,.30)",
+    spots: "#a82820",
+  },
+  {
+    name: "Ogon",
+    rarity: 0.16,
+    size: [37, 50],
+    back: "#8a6010",
+    body: "#c89028",
+    flank: "#e0ac40",
+    belly: "#dcae50",
+    bellyHi: "#f0d080",
+    fin: "#7a5818",
+    finRed: "#604008",
+    finEdge: "#3c2804",
+    scale: "rgba(120,80,20,.25)",
+    scaleHi: "rgba(255,220,100,.30)",
+  },
+  {
+    name: "Kohaku",
+    rarity: 0.14,
+    size: [38, 52],
+    back: "#c8c0aa",
+    body: "#ece4d0",
+    flank: "#f4f0e4",
+    belly: "#ece4d0",
+    bellyHi: "#faf8f2",
+    fin: "#8a201c",
+    finRed: "#6c140e",
+    finEdge: "#4a0808",
+    scale: "rgba(0,0,0,.10)",
+    scaleHi: "rgba(255,255,255,.30)",
+    spots: "#9c2418",
+  },
+  {
+    name: "Mirror",
+    rarity: 0.1,
+    size: [42, 55],
+    back: "#1e1810",
+    body: "#3a3028",
+    flank: "#4a3c2c",
+    belly: "#5a4a3a",
+    bellyHi: "#786050",
+    fin: "#1a1410",
+    finRed: "#100e08",
+    finEdge: "#080604",
+    scale: "rgba(220,200,160,.10)",
+    scaleHi: "rgba(255,240,200,.25)",
+    mirror: true,
+  },
+  {
+    name: "Black",
+    rarity: 0.08,
+    size: [43, 58],
+    back: "#0c080c",
+    body: "#181214",
+    flank: "#281c20",
+    belly: "#2a2024",
+    bellyHi: "#3c2c34",
+    fin: "#080608",
+    finRed: "#060408",
+    finEdge: "#040206",
+    scale: "rgba(60,40,40,.18)",
+    scaleHi: "rgba(100,80,80,.15)",
+  },
+  {
+    name: "Ghost",
+    rarity: 0.05,
+    size: [40, 52],
+    back: "#788284",
+    body: "#a8b2b4",
+    flank: "#b8c0c2",
+    belly: "#c0c8c8",
+    bellyHi: "#d8e0e0",
+    fin: "#6a7474",
+    finRed: "#505e60",
+    finEdge: "#384244",
+    scale: "rgba(255,255,255,.10)",
+    scaleHi: "rgba(255,255,255,.25)",
+  },
+  {
+    name: "Tancho",
+    rarity: 0.03,
+    size: [44, 59],
+    back: "#c8c0aa",
+    body: "#ece4d0",
+    flank: "#f4f0e4",
+    belly: "#ece4d0",
+    bellyHi: "#faf8f2",
+    fin: "#a06018",
+    finRed: "#7a4010",
+    finEdge: "#542808",
+    scale: "rgba(0,0,0,.10)",
+    scaleHi: "rgba(255,255,255,.30)",
+    spots: "#a02818",
+    tancho: true,
+  },
+];
 
-const BLACK_CARP = {
-  name: "Black Carp",
-  back: "#0e0e0e",
-  body: "#252525",
-  flank: "#3c3c3c",
-  bellyHi: "#7a7a7a",
-  belly: "#585858",
-  fin: "#181818",
-  finRed: "#202020",
-  finEdge: "#080808",
-  scale: "rgba(0,0,0,.55)",
-  scaleHi: "rgba(160,160,160,.18)",
-  size: [34, 44],
-};
-
-const KOI_CARP = {
-  name: "Wild Koi",
-  back: "#c04018",
-  body: "#e06828",
-  flank: "#f0a050",
-  bellyHi: "#fff8f0",
-  belly: "#f5e0c8",
-  fin: "#b83010",
-  finRed: "#d85030",
-  finEdge: "#882010",
-  scale: "rgba(140,38,8,.32)",
-  scaleHi: "rgba(255,215,170,.28)",
-  size: [28, 36],
-};
-
-const GRASS_CARP = {
-  name: "Grass Carp",
-  back: "#2e3e1a",
-  body: "#506030",
-  flank: "#7a9050",
-  bellyHi: "#e8e8d4",
-  belly: "#c0c0a8",
-  fin: "#405028",
-  finRed: "#607040",
-  finEdge: "#202e10",
-  scale: "rgba(28,38,12,.38)",
-  scaleHi: "rgba(190,215,145,.20)",
-  size: [36, 46],
-};
-
-const GRAY_CARP = {
-  name: "Gray Carp",
-  back: "#3a3a44",
-  body: "#6a6a78",
-  flank: "#a0a0b4",
-  bellyHi: "#f0f0f5",
-  belly: "#d0d0dc",
-  fin: "#484858",
-  finRed: "#686878",
-  finEdge: "#282830",
-  scale: "rgba(18,18,28,.38)",
-  scaleHi: "rgba(210,210,235,.24)",
-  size: [30, 40],
-};
-
-const KOHAKU_KOI = {
-  name: "Kohaku Koi",
-  back: "#c81808",
-  body: "#e04838",
-  flank: "#f5b0a0",
-  bellyHi: "#ffffff",
-  belly: "#f8f0ee",
-  fin: "#ecd8d4",
-  finRed: "#c82010",
-  finEdge: "#a01008",
-  scale: "rgba(180,24,8,.28)",
-  scaleHi: "rgba(255,255,255,.55)",
-  size: [28, 36],
-};
-
-const ALL_SPECIES = [CARP, BLACK_CARP, KOI_CARP, GRASS_CARP, GRAY_CARP, KOHAKU_KOI];
+function pickSpecies() {
+  const r = Math.random();
+  let acc = 0;
+  for (const s of ALL_SPECIES) {
+    acc += s.rarity;
+    if (r <= acc) return s;
+  }
+  return ALL_SPECIES[0];
+}
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Fish — spine-driven body, multiple fins, smooth physics
 
 class Fish {
   constructor(W, H, surfaceY, depth, name) {
-    this.species = ALL_SPECIES[Math.floor(Math.random() * ALL_SPECIES.length)];
+    this.species = pickSpecies();
     this.name = name;
     const [smin, smax] = this.species.size;
     this.length = smin + Math.random() * (smax - smin);
@@ -462,7 +508,7 @@ class Fish {
       });
     }
 
-    // ─ Caudal (tail) fin — clearly forked, two lobes with a notch ──
+    // ─ Caudal (tail) fin ────────────────────────────────────────────
     const tailAng = angs[N - 1];
     const tx = pts[N - 1].x,
       ty = pts[N - 1].y;
@@ -473,48 +519,37 @@ class Fish {
     const tailReach = this.length * 0.26;
     const sweep = Math.sin(this.phase) * 0.45;
     const spread = this.bodyH * 1.05;
-    // Two lobe tips (upper + lower), each offset perpendicular to heading
     const upTipX = tx + tfx * tailReach + tpx * spread * (1.05 + sweep);
     const upTipY = ty + tfy * tailReach + tpy * spread * (1.05 + sweep);
     const dnTipX = tx + tfx * tailReach - tpx * spread * (1.05 - sweep);
     const dnTipY = ty + tfy * tailReach - tpy * spread * (1.05 - sweep);
-    // Inner notch point (recessed)
     const notchX = tx + tfx * tailReach * 0.55;
     const notchY = ty + tfy * tailReach * 0.55;
-    // Roots where the fin meets the peduncle, slightly off the body line
     const rootUpX = tx + tpx * this.bodyH * 0.22;
     const rootUpY = ty + tpy * this.bodyH * 0.22;
     const rootDnX = tx - tpx * this.bodyH * 0.22;
     const rootDnY = ty - tpy * this.bodyH * 0.22;
-    ctx.save();
-    ctx.globalAlpha = depthDim;
-
-    // Tail fill
     ctx.fillStyle = sp.fin;
     ctx.beginPath();
     ctx.moveTo(rootUpX, rootUpY);
-    // Upper lobe outer curve out to tip
     ctx.quadraticCurveTo(
       rootUpX + tfx * tailReach * 0.35 + tpx * spread * 0.7,
       rootUpY + tfy * tailReach * 0.35 + tpy * spread * 0.7,
       upTipX,
       upTipY,
     );
-    // Upper lobe trailing edge into notch
     ctx.quadraticCurveTo(
       tx + tfx * tailReach * 0.9 + tpx * spread * 0.2,
       ty + tfy * tailReach * 0.9 + tpy * spread * 0.2,
       notchX,
       notchY,
     );
-    // Lower lobe leading edge out to lower tip
     ctx.quadraticCurveTo(
       tx + tfx * tailReach * 0.9 - tpx * spread * 0.2,
       ty + tfy * tailReach * 0.9 - tpy * spread * 0.2,
       dnTipX,
       dnTipY,
     );
-    // Lower lobe outer curve back to root
     ctx.quadraticCurveTo(
       rootDnX + tfx * tailReach * 0.35 - tpx * spread * 0.7,
       rootDnY + tfy * tailReach * 0.35 - tpy * spread * 0.7,
@@ -523,135 +558,26 @@ class Fish {
     );
     ctx.closePath();
     ctx.fill();
-
-    // Darker edge tint on tail
     ctx.fillStyle = "rgba(20,12,8,.22)";
     ctx.fill();
-
-    // Tail rays — fan out from base toward each lobe tip
     ctx.strokeStyle = "rgba(20,12,8,.55)";
     ctx.lineWidth = 0.6;
     for (let k = 0; k < 6; k++) {
       const u = k / 5;
-      // upper lobe rays
-      const exU = rootUpX * (1 - u) + upTipX * u;
-      const eyU = rootUpY * (1 - u) + upTipY * u;
       ctx.beginPath();
       ctx.moveTo(tx + tpx * this.bodyH * 0.1, ty + tpy * this.bodyH * 0.1);
-      ctx.lineTo(exU, eyU);
+      ctx.lineTo(
+        rootUpX * (1 - u) + upTipX * u,
+        rootUpY * (1 - u) + upTipY * u,
+      );
       ctx.stroke();
-      // lower lobe rays
-      const exD = rootDnX * (1 - u) + dnTipX * u;
-      const eyD = rootDnY * (1 - u) + dnTipY * u;
       ctx.beginPath();
       ctx.moveTo(tx - tpx * this.bodyH * 0.1, ty - tpy * this.bodyH * 0.1);
-      ctx.lineTo(exD, eyD);
-      ctx.stroke();
-    }
-
-    // ─ Dorsal fin: LONG, running ~30%–72% of the back ──────────────
-    // Common carp has a characteristically long dorsal. Build a curved
-    // strip from di1 to di2 with a peaked, sail-like outline and ray lines.
-    const di1 = Math.floor(N * 0.3),
-      di2 = Math.floor(N * 0.72);
-    ctx.fillStyle = sp.fin;
-    ctx.beginPath();
-    ctx.moveTo(top[di1].x, top[di1].y);
-    for (let i = di1; i <= di2; i++) {
-      const u = (i - di1) / (di2 - di1);
-      const ang = angs[i];
-      const px = -Math.sin(ang),
-        py = Math.cos(ang);
-      // Fin height profile: rises quickly near front to a tall front spine,
-      // tapers gently along the length (carp dorsal is taller at front).
-      const finH = this.bodyH * (0.55 + 0.55 * Math.exp(-u * 3.5));
-      ctx.lineTo(top[i].x + px * finH, top[i].y + py * finH);
-    }
-    // Close along the top edge of the body
-    for (let i = di2; i >= di1; i--) ctx.lineTo(top[i].x, top[i].y);
-    ctx.closePath();
-    ctx.fill();
-    // Darker base of dorsal
-    ctx.fillStyle = "rgba(30,18,8,.30)";
-    ctx.fill();
-    // Dorsal rays
-    ctx.strokeStyle = "rgba(30,18,8,.55)";
-    ctx.lineWidth = 0.5;
-    for (let i = di1 + 1; i < di2; i += 1) {
-      const u = (i - di1) / (di2 - di1);
-      const ang = angs[i];
-      const px = -Math.sin(ang),
-        py = Math.cos(ang);
-      const finH = this.bodyH * (0.55 + 0.55 * Math.exp(-u * 3.5));
-      ctx.beginPath();
-      ctx.moveTo(top[i].x, top[i].y);
-      ctx.lineTo(top[i].x + px * finH * 0.95, top[i].y + py * finH * 0.95);
-      ctx.stroke();
-    }
-
-    // ─ Anal fin (bottom, near tail) — reddish-orange ───────────────
-    const ai1 = Math.floor(N * 0.7),
-      ai2 = Math.floor(N * 0.84);
-    ctx.fillStyle = sp.finRed;
-    ctx.beginPath();
-    ctx.moveTo(bot[ai1].x, bot[ai1].y);
-    const apkx =
-      (bot[ai1].x + bot[ai2].x) / 2 +
-      Math.sin(angs[((ai1 + ai2) / 2) | 0]) * this.bodyH * 0.55;
-    const apky =
-      (bot[ai1].y + bot[ai2].y) / 2 -
-      Math.cos(angs[((ai1 + ai2) / 2) | 0]) * this.bodyH * 0.55;
-    ctx.quadraticCurveTo(apkx, apky, bot[ai2].x, bot[ai2].y);
-    ctx.closePath();
-    ctx.fill();
-    // Anal fin rays
-    ctx.strokeStyle = "rgba(80,20,10,.5)";
-    ctx.lineWidth = 0.5;
-    for (let k = 0; k < 4; k++) {
-      const u = (k + 1) / 5;
-      const i = Math.floor(ai1 + (ai2 - ai1) * u);
-      const ang = angs[i];
-      const px = -Math.sin(ang),
-        py = Math.cos(ang);
-      const h = this.bodyH * 0.5 * (1 - Math.abs(u - 0.5) * 1.2);
-      ctx.beginPath();
-      ctx.moveTo(bot[i].x, bot[i].y);
-      ctx.lineTo(bot[i].x - px * h, bot[i].y - py * h);
-      ctx.stroke();
-    }
-
-    // ─ Pelvic fin (small, beneath the body mid-rear) ────────────────
-    const plI = Math.floor(N * 0.52);
-    {
-      const ang = angs[plI];
-      const px = -Math.sin(ang),
-        py = Math.cos(ang);
-      const fx = Math.cos(ang),
-        fy = Math.sin(ang);
-      const flap = Math.sin(this.phase * 1.2 + 1.2) * 0.18;
-      const baseX = bot[plI].x,
-        baseY = bot[plI].y;
-      const tipX =
-        baseX - px * this.bodyH * (0.65 + flap) - fx * this.length * 0.04;
-      const tipY =
-        baseY - py * this.bodyH * (0.65 + flap) - fy * this.length * 0.04;
-      ctx.fillStyle = sp.finRed;
-      ctx.beginPath();
-      ctx.moveTo(baseX, baseY);
-      ctx.quadraticCurveTo(
-        baseX - px * this.bodyH * 0.3 + fx * 6,
-        baseY - py * this.bodyH * 0.3 + fy * 6,
-        tipX,
-        tipY,
+      ctx.lineTo(
+        rootDnX * (1 - u) + dnTipX * u,
+        rootDnY * (1 - u) + dnTipY * u,
       );
-      ctx.quadraticCurveTo(
-        baseX - px * this.bodyH * 0.2 - fx * 4,
-        baseY - py * this.bodyH * 0.2 - fy * 4,
-        baseX - fx * 6,
-        baseY - fy * 6,
-      );
-      ctx.closePath();
-      ctx.fill();
+      ctx.stroke();
     }
 
     // ─ Body fill ────────────────────────────────────────────────────
@@ -749,16 +675,76 @@ class Fish {
     }
     ctx.closePath();
     ctx.fill();
+
+    // Mirror carp: large sparse reflective scales
+    if (sp.mirror) {
+      ctx.fillStyle = "rgba(220,200,150,.35)";
+      const seed = this.id
+        ? parseInt(this.id, 36) || 1
+        : Math.floor(this.length * 17);
+      for (let k = 0; k < 6; k++) {
+        const i = 3 + ((seed * (k + 1)) % (N - 6));
+        const u = i / (N - 1),
+          t = this.thickness(u);
+        const ang = angs[i],
+          px = -Math.sin(ang),
+          py = Math.cos(ang);
+        const yo = (((seed * (k + 3)) % 100) / 100 - 0.5) * t * 1.4;
+        ctx.beginPath();
+        ctx.ellipse(
+          pts[i].x + px * yo,
+          pts[i].y + py * yo,
+          4.5,
+          3.5,
+          ang,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
+    }
+
+    // Spots: colored patches for Sanke, Kohaku, Tancho
+    if (sp.spots) {
+      ctx.fillStyle = sp.spots;
+      const seed = this.id
+        ? parseInt(this.id, 36) || 1
+        : Math.floor(this.length * 17);
+      const n = sp.tancho ? 1 : 4;
+      for (let k = 0; k < n; k++) {
+        const u = sp.tancho ? 0.18 : 0.2 + ((seed + k * 47) % 60) / 100;
+        const i = Math.min(N - 2, Math.max(1, Math.floor(u * (N - 1))));
+        const t = this.thickness(u),
+          ang = angs[i];
+        const px = -Math.sin(ang),
+          py = Math.cos(ang);
+        const yo = sp.tancho
+          ? -t * 0.5
+          : (((seed * (k + 1)) % 100) / 100 - 0.5) * t * 1.3;
+        const sr = sp.tancho ? t * 0.9 : t * (0.5 + ((seed + k) % 30) / 100);
+        ctx.beginPath();
+        ctx.ellipse(
+          pts[i].x + px * yo,
+          pts[i].y + py * yo,
+          sr * 1.1,
+          sr * 0.85,
+          ang,
+          0,
+          Math.PI * 2,
+        );
+        ctx.fill();
+      }
+    }
+
     ctx.restore();
 
-    // ─ Pectoral fin (behind gill, side) — reddish-orange ───────────
+    // ─ Pectoral fin (behind gill, flapping) ─────────────────────────
     const pi = Math.floor(N * 0.22);
     const pang = angs[pi];
     const ppx = -Math.sin(pang),
       ppy = Math.cos(pang);
     const finFlap = Math.sin(this.phase * 1.5) * 0.3;
-    ctx.fillStyle = sp.finRed;
-    ctx.beginPath();
+    ctx.fillStyle = sp.fin;
     const pcx = pts[pi].x + ppx * this.bodyH * 0.3;
     const pcy = pts[pi].y + ppy * this.bodyH * 0.3;
     const ptipX =
@@ -769,6 +755,7 @@ class Fish {
       pcy +
       ppy * this.bodyH * (1.2 + finFlap) -
       Math.sin(pang) * this.length * 0.02;
+    ctx.beginPath();
     ctx.moveTo(
       pts[pi].x + ppx * this.bodyH * 0.1,
       pts[pi].y + ppy * this.bodyH * 0.1,
@@ -787,18 +774,19 @@ class Fish {
     );
     ctx.closePath();
     ctx.fill();
-    // Pectoral rays
-    ctx.strokeStyle = "rgba(80,20,10,.55)";
+    ctx.strokeStyle = "rgba(0,0,0,.3)";
     ctx.lineWidth = 0.5;
     for (let k = 0; k < 5; k++) {
       const u = (k + 1) / 6;
-      const sx = pts[pi].x + ppx * this.bodyH * 0.15;
-      const sy = pts[pi].y + ppy * this.bodyH * 0.15;
-      const ex2 = ptipX * u + (pcx + Math.cos(pang) * 6) * (1 - u);
-      const ey2 = ptipY * u + (pcy + Math.sin(pang) * 6) * (1 - u);
       ctx.beginPath();
-      ctx.moveTo(sx, sy);
-      ctx.lineTo(ex2, ey2);
+      ctx.moveTo(
+        pts[pi].x + ppx * this.bodyH * 0.15,
+        pts[pi].y + ppy * this.bodyH * 0.15,
+      );
+      ctx.lineTo(
+        ptipX * u + (pcx + Math.cos(pang) * 6) * (1 - u),
+        ptipY * u + (pcy + Math.sin(pang) * 6) * (1 - u),
+      );
       ctx.stroke();
     }
 
@@ -1505,86 +1493,421 @@ function drawLine(ctx, x1, y1, x2, y2, tension) {
   ctx.quadraticCurveTo(mx, my, x2, y2);
   ctx.stroke();
 }
-const HOOK_J_OX = 7, HOOK_J_OY = 20;
+const HOOK_J_OX = 7,
+  HOOK_J_OY = 20;
 
-function drawHook(ctx, x, y, hooked) {
+// Hook geometry — Korda-style wide-gape carp hook in local coords
+// (eye at origin, shank descending +y, J-bend sweeping out to +x):
+//   eye:      (0, 0)            ← line knots here
+//   shank:    (0,3)  → (0.6,16) ← slightly curved shank
+//   J-bend:   cubic to (14, 26) sweeping outward
+//   point:    up to (13.5, 7)   ← beaked, curves slightly back inward
+//   barb:     (10.6, 9.4)
+// This is the SAME geometry whether hooked or not; only the transform changes.
+function drawHook(
+  ctx,
+  x,
+  y,
+  hooked,
+  time = 0,
+  swing = 0,
+  lineDir = 0,
+  J_TO_EYE = Math.hypot(14, 16),
+  J_LOCAL_ANGLE = Math.atan2(16, 14),
+) {
   ctx.save();
-  // Not hooked: eye at (x,y) — where the line ties.
-  // Hooked: J-curve at (x,y) — the fish's mouth position.
-  //         Eye is offset above/left, line connects there.
-  ctx.translate(hooked ? x - HOOK_J_OX : x, hooked ? y - HOOK_J_OY : y);
 
-  if (!hooked) {
-    // Bait boilie below the J-bend (threaded on the hook)
-    const bx = 7, by = 32, bR = 8;
-
-    ctx.save();
-    ctx.globalAlpha = 0.25;
-    ctx.fillStyle = "#000";
-    ctx.beginPath();
-    ctx.ellipse(bx + 2, by + 9, 7, 2, 0, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.globalAlpha = 0.38;
-    const glow = ctx.createRadialGradient(bx, by, 2, bx, by, 14);
-    glow.addColorStop(0, "rgba(255,80,30,.65)");
-    glow.addColorStop(1, "rgba(255,80,30,0)");
-    ctx.fillStyle = glow;
-    ctx.beginPath();
-    ctx.arc(bx, by, 14, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.restore();
-
-    ctx.save();
-    ctx.translate(bx, by);
-    const baitG = ctx.createRadialGradient(-bR * 0.38, -bR * 0.42, bR * 0.1, 0, 0, bR * 1.05);
-    baitG.addColorStop(0,   "#ff8a40");
-    baitG.addColorStop(0.4, "#d42e10");
-    baitG.addColorStop(1.0, "#7a1006");
-    ctx.fillStyle = baitG;
-    ctx.beginPath();
-    ctx.arc(0, 0, bR, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.fillStyle = "rgba(255,248,225,.88)";
-    ctx.beginPath();
-    ctx.ellipse(-bR * 0.38, -bR * 0.42, bR * 0.28, bR * 0.17, -0.5, 0, Math.PI * 2);
-    ctx.fill();
-    ctx.strokeStyle = "rgba(70,6,2,.40)";
-    ctx.lineWidth = 0.6;
-    ctx.beginPath();
-    ctx.arc(0, 0, bR, 0, Math.PI * 2);
-    ctx.stroke();
-    ctx.restore();
+  if (hooked) {
+    // x,y is the J-curve (= the fish's mouth/lip). Pivot at J,
+    // rotate so the eye sits OUTSIDE the mouth in the rod-tip direction.
+    ctx.translate(x, y);
+    ctx.rotate(lineDir + Math.PI - J_LOCAL_ANGLE);
+    // Tiny high-frequency jitter — the fish thrashing against the hook
+    ctx.rotate(Math.sin(time * 17) * 0.025 + Math.sin(time * 9.3) * 0.015);
+    // Now shift the origin to the EYE so the rest of the drawing uses
+    // the same local coords as the not-hooked branch.
+    // (After the rotation above, local (14,16) sits in the +x direction of
+    // length J_TO_EYE from the pivot. To put EYE at origin we translate
+    // by minus-(eye→J vector) = minus-(J_TO_EYE, 0) in the rotated frame.
+    // Equivalently: translate so that point (14,16) ends up where (x,y) was.)
+    // Simplest: build the hook with J at origin instead — translate by
+    // -(14, 16) in local coords first.
+    ctx.translate(-14, -16);
+  } else {
+    // x,y is the eye. Pendulum swings around the eye/line-attachment point.
+    ctx.translate(x, y);
+    ctx.rotate(swing);
   }
 
-  const hookColor = "#dde4ec";
-  const hookShadow = "rgba(18,26,38,.60)";
+  // ── Hook wire — polished black-nickel carp hook ───────────────────
+  const wireDark = "rgba(8,11,16,.95)"; // shadow / outline
+  const wireSteel = "#3a4350"; // body of the wire
+  const wireSheen = "rgba(220,230,240,.85)"; // specular running along one side
+  const wireRim = "rgba(255,255,255,.55)"; // tiny rim highlight
 
-  for (let pass = 0; pass < 2; pass++) {
-    ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
-    ctx.lineWidth   = pass === 0 ? 3.8 : 2.4;
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+  // Path helper: traces shank → J-bend → point (does NOT include eye/barb)
+  function tracePrimary() {
     ctx.beginPath();
     ctx.moveTo(0, 3);
-    ctx.lineTo(0, 16);
-    ctx.bezierCurveTo(0, 24, 14, 26, 14, 16);
-    ctx.lineTo(14, 8);
-    ctx.stroke();
+    // Subtly curved shank — bows out slightly to the right
+    ctx.quadraticCurveTo(0.9, 10, 0.6, 16);
+    // J-bend: wide gape, swept out to (14, 26) then up
+    ctx.bezierCurveTo(0.6, 24.5, 14.2, 27.2, 14.6, 16);
+    // Beaked point — curves slightly INWARD (toward shank) at the tip
+    ctx.bezierCurveTo(14.7, 12.5, 13.9, 9.2, 13.5, 7);
+  }
+  function traceBarb() {
+    // Strong micro-barb on the inside of the point
     ctx.beginPath();
-    ctx.moveTo(14, 12);
-    ctx.lineTo(10, 9);
-    ctx.stroke();
+    ctx.moveTo(13.7, 11.0);
+    ctx.lineTo(10.6, 9.2);
   }
 
-  for (let pass = 0; pass < 2; pass++) {
-    ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
-    ctx.lineWidth   = pass === 0 ? 3.2 : 1.9;
+  // Soft refraction halo (water bends light around the wire)
+  ctx.save();
+  ctx.globalAlpha = 0.18;
+  ctx.strokeStyle = "rgba(180,215,235,.9)";
+  ctx.lineWidth = 4.4;
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  tracePrimary();
+  ctx.stroke();
+  ctx.restore();
+
+  // Pass 1: dark outline → body
+  ctx.lineCap = "round";
+  ctx.lineJoin = "round";
+  ctx.strokeStyle = wireDark;
+  ctx.lineWidth = 3.2;
+  tracePrimary();
+  ctx.stroke();
+  traceBarb();
+  ctx.lineWidth = 2.4;
+  ctx.stroke();
+
+  // Pass 2: steel body
+  ctx.strokeStyle = wireSteel;
+  ctx.lineWidth = 1.9;
+  tracePrimary();
+  ctx.stroke();
+  traceBarb();
+  ctx.lineWidth = 1.4;
+  ctx.stroke();
+
+  // Pass 3: long, thin sheen along the upper-left side of the wire
+  // (mostly visible on the shank; the J-bend catches a tiny glint)
+  ctx.save();
+  ctx.strokeStyle = wireSheen;
+  ctx.lineWidth = 0.55;
+  ctx.globalAlpha = 0.85;
+  ctx.beginPath();
+  ctx.moveTo(-0.55, 5);
+  ctx.quadraticCurveTo(-0.4, 11, -0.35, 15.5);
+  ctx.stroke();
+  // Glint on the outer J-curve
+  ctx.beginPath();
+  ctx.arc(7.6, 25.1, 5.2, Math.PI * 0.6, Math.PI * 0.9);
+  ctx.stroke();
+  ctx.restore();
+
+  // Tiny white rim highlight on the very top of the shank — catches light
+  ctx.save();
+  ctx.strokeStyle = wireRim;
+  ctx.lineWidth = 0.35;
+  ctx.beginPath();
+  ctx.moveTo(0.2, 3.5);
+  ctx.lineTo(0.5, 8);
+  ctx.stroke();
+  ctx.restore();
+
+  // ── Eye — out-turned ring (bent away from the shank axis) ────────
+  // Bend angle ≈ -12° from the shank axis (Korda Wide Gape look)
+  ctx.save();
+  ctx.translate(-0.3, -0.2);
+  ctx.rotate(-0.21);
+  // Eye shadow (oval — out-turn makes it look slightly tilted)
+  ctx.strokeStyle = wireDark;
+  ctx.lineWidth = 2.6;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 3.4, 3.0, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  // Eye body
+  ctx.strokeStyle = wireSteel;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 3.4, 3.0, 0, 0, Math.PI * 2);
+  ctx.stroke();
+  // Inner shadow inside the eye-hole — gives the ring depth
+  ctx.fillStyle = "rgba(0,0,0,.55)";
+  ctx.beginPath();
+  ctx.ellipse(0, 0, 2.0, 1.7, 0, 0, Math.PI * 2);
+  ctx.fill();
+  // Rim highlight on top-left of the eye
+  ctx.strokeStyle = wireRim;
+  ctx.lineWidth = 0.5;
+  ctx.globalAlpha = 0.85;
+  ctx.beginPath();
+  ctx.arc(0, 0, 3.2, Math.PI * 1.05, Math.PI * 1.5);
+  ctx.stroke();
+  ctx.restore();
+
+  // Small whipping / knotless-knot wrap where the line ties to the shank
+  ctx.save();
+  ctx.strokeStyle = "rgba(60,52,40,.85)";
+  ctx.lineWidth = 1.3;
+  ctx.beginPath();
+  ctx.moveTo(-1.1, 4.2);
+  ctx.lineTo(1.7, 4.6);
+  ctx.moveTo(-1.0, 5.4);
+  ctx.lineTo(1.7, 5.6);
+  ctx.moveTo(-0.9, 6.6);
+  ctx.lineTo(1.6, 6.7);
+  ctx.stroke();
+  ctx.restore();
+
+  // ── Hooked-state extra: the J's penetration into the fish lip ─────
+  if (hooked) {
+    ctx.save();
+    // A small puckered lip-skin pinch around the J's outer curve.
+    // Drawn in local coords near the J-bend bottom (14, 26).
+    ctx.fillStyle = "rgba(50,18,22,.45)";
     ctx.beginPath();
-    ctx.arc(0, 0, 3.5, 0, Math.PI * 2);
+    ctx.ellipse(14.2, 26.4, 4.6, 1.8, 0.3, 0, Math.PI * 2);
+    ctx.fill();
+    // A faint hint of moisture / tension where wire pierces the lip
+    ctx.strokeStyle = "rgba(255,255,255,.35)";
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.arc(13.7, 25.5, 1.6, Math.PI * 0.3, Math.PI * 0.9);
     ctx.stroke();
+    ctx.restore();
+  }
+
+  if (!hooked) {
+    // ── Hair rig: thin braided line from the BEND of the hook down to the boilie ──
+    // The hair comes off the bend (knotless-knot style), not the eye.
+    const bx = 9,
+      byCenter = 41; // bait center
+    const bRx = 8.4,
+      bRy = 9.1; // slightly compressed (taller than wide)
+    const hrAX = 4.0,
+      hrAY = 26.6; // hair anchor on the bend
+
+    // Multi-frequency drift on the hair for life-like motion
+    const drift1 = Math.sin(time * 1.6 + 0.3) * 0.7;
+    const drift2 = Math.sin(time * 0.7 + 1.4) * 0.4;
+
+    // Hair line — fine, dark fluorocarbon
+    ctx.save();
+    ctx.strokeStyle = "rgba(40,38,30,.78)";
+    ctx.lineWidth = 0.55;
+    ctx.beginPath();
+    ctx.moveTo(hrAX, hrAY);
+    ctx.quadraticCurveTo(6 + drift1, 33 + drift2, bx - 0.4, byCenter - bRy);
+    ctx.stroke();
+    // Faint moisture / sheen on the hair
+    ctx.strokeStyle = "rgba(255,255,255,.25)";
+    ctx.lineWidth = 0.3;
+    ctx.beginPath();
+    ctx.moveTo(hrAX + 0.2, hrAY + 0.4);
+    ctx.quadraticCurveTo(
+      6.2 + drift1,
+      33.2 + drift2,
+      bx - 0.25,
+      byCenter - bRy - 0.2,
+    );
+    ctx.stroke();
+    // Hair stop (small dark silicone bead just above the boilie)
+    ctx.fillStyle = "#15110a";
+    ctx.beginPath();
+    ctx.ellipse(bx - 0.3, byCenter - bRy - 1.1, 1.05, 0.7, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,255,255,.5)";
+    ctx.beginPath();
+    ctx.arc(bx - 0.7, byCenter - bRy - 1.35, 0.35, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // ── Bait: a compressed boilie, swung slightly behind the line ──
+    ctx.save();
+    ctx.translate(bx, byCenter);
+    // Bait swings on the hair — small extra pendulum on top of the rig's swing
+    const baitSwing = Math.sin(time * 1.1 + 0.7) * 0.07;
+    ctx.rotate(baitSwing);
+
+    // Contact shadow on suspended particles below
+    ctx.save();
+    ctx.globalAlpha = 0.22;
+    ctx.fillStyle = "#02060a";
+    ctx.beginPath();
+    ctx.ellipse(0.6, bRy + 1.6, bRx * 0.85, 1.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Attractant / oil cloud dispersing into the water
+    ctx.save();
+    const pulse = 0.78 + Math.sin(time * 0.8) * 0.22;
+    ctx.globalAlpha = 0.34 * pulse;
+    const halo = ctx.createRadialGradient(0, 1, bRx * 0.35, 0, 1, bRx * 3.0);
+    halo.addColorStop(0, "rgba(255,130,70,.55)");
+    halo.addColorStop(0.45, "rgba(220,80,35,.18)");
+    halo.addColorStop(1, "rgba(180,40,20,0)");
+    ctx.fillStyle = halo;
+    ctx.beginPath();
+    ctx.arc(0, 1, bRx * 3.0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Boilie body — multi-stop gradient with subsurface scattering on the dark side
+    const baitG = ctx.createRadialGradient(
+      -bRx * 0.45,
+      -bRy * 0.55,
+      bRx * 0.05,
+      bRx * 0.2,
+      bRy * 0.25,
+      bRx * 1.25,
+    );
+    baitG.addColorStop(0.0, "#ffcfa3");
+    baitG.addColorStop(0.12, "#ff8b48");
+    baitG.addColorStop(0.4, "#df3a14");
+    baitG.addColorStop(0.72, "#9c1808");
+    baitG.addColorStop(0.95, "#4d0a04");
+    baitG.addColorStop(1.0, "#2a0502");
+    ctx.fillStyle = baitG;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, bRx, bRy, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Micro-dimple texture (boilies are pock-marked from boiling)
+    ctx.save();
+    ctx.beginPath();
+    ctx.ellipse(0, 0, bRx, bRy, 0, 0, Math.PI * 2);
+    ctx.clip();
+    ctx.globalAlpha = 0.4;
+    const dimples = [
+      [-3.6, -1.2, 0.7, 0.45],
+      [2.0, -3.5, 0.6, 0.4],
+      [-1.4, 2.8, 0.75, 0.5],
+      [3.7, 1.4, 0.55, 0.4],
+      [-4.6, 2.0, 0.45, 0.35],
+      [0.6, 4.7, 0.6, 0.4],
+      [2.9, -1.8, 0.5, 0.35],
+      [-2.7, -3.8, 0.5, 0.35],
+      [4.5, -2.9, 0.45, 0.3],
+      [1.2, 0.4, 0.4, 0.3],
+      [-1.0, -1.6, 0.5, 0.35],
+      [-3.8, 4.4, 0.5, 0.35],
+      [4.1, 4.0, 0.5, 0.32],
+      [0.0, -4.7, 0.5, 0.34],
+    ];
+    // Each dimple: dark dot + tiny highlight = 3D pock
+    for (const [dx, dy, dr, da] of dimples) {
+      ctx.fillStyle = `rgba(36,8,4,${da})`;
+      ctx.beginPath();
+      ctx.arc(dx, dy, dr, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = `rgba(255,210,170,${da * 0.55})`;
+      ctx.beginPath();
+      ctx.arc(dx - dr * 0.35, dy - dr * 0.35, dr * 0.4, 0, Math.PI * 2);
+      ctx.fill();
+    }
+    ctx.restore();
+
+    // Wet specular highlight — small & sharp (oil-coated boilie)
+    ctx.save();
+    ctx.globalAlpha = 1;
+    const spec = ctx.createRadialGradient(
+      -bRx * 0.42,
+      -bRy * 0.55,
+      0,
+      -bRx * 0.42,
+      -bRy * 0.55,
+      bRx * 0.55,
+    );
+    spec.addColorStop(0, "rgba(255,250,235,.95)");
+    spec.addColorStop(0.55, "rgba(255,220,180,.30)");
+    spec.addColorStop(1, "rgba(255,200,150,0)");
+    ctx.fillStyle = spec;
+    ctx.beginPath();
+    ctx.ellipse(
+      -bRx * 0.42,
+      -bRy * 0.55,
+      bRx * 0.42,
+      bRy * 0.26,
+      -0.5,
+      0,
+      Math.PI * 2,
+    );
+    ctx.fill();
+    // Tiny crisp specular pip — the brightest single point
+    ctx.fillStyle = "rgba(255,255,250,.95)";
+    ctx.beginPath();
+    ctx.arc(-bRx * 0.46, -bRy * 0.62, 0.7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Secondary rim highlight on the bottom-right (water reflecting up)
+    ctx.save();
+    ctx.globalAlpha = 0.55;
+    ctx.strokeStyle = "rgba(255,180,130,.6)";
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, bRx - 0.5, bRy - 0.5, 0, Math.PI * 0.15, Math.PI * 0.55);
+    ctx.stroke();
+    ctx.restore();
+
+    // Rim darkening for spherical depth
+    ctx.save();
+    const rim = ctx.createRadialGradient(0, 0, bRx * 0.72, 0, 0, bRx);
+    rim.addColorStop(0, "rgba(0,0,0,0)");
+    rim.addColorStop(1, "rgba(0,0,0,.45)");
+    ctx.fillStyle = rim;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, bRx, bRy, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    // Drilled hair-hole at the top
+    ctx.fillStyle = "rgba(16,3,2,.92)";
+    ctx.beginPath();
+    ctx.ellipse(-0.4, -bRy + 0.5, 1.0, 0.6, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.restore(); // end bait body transform
+
+    // ── Water disturbance: suspended particles + rising bubbles ──
+    ctx.save();
+    // Suspended sediment particles drifting near the bait
+    ctx.fillStyle = "rgba(220,228,232,.55)";
+    for (let i = 0; i < 9; i++) {
+      const phase = i * 1.37 + time * 0.55;
+      const px = bx - 16 + ((i * 5.3 + time * 4) % 32);
+      const py = byCenter - 14 + Math.sin(phase) * 8 + i * 1.4;
+      const pr = 0.45 + (i % 3) * 0.2;
+      ctx.globalAlpha = 0.18 + 0.18 * (0.5 + Math.sin(phase * 1.3) * 0.5);
+      ctx.beginPath();
+      ctx.arc(px, py, pr, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    // Tiny bubbles rising from the boilie (oils releasing)
+    for (let i = 0; i < 5; i++) {
+      const t0 = (time * 0.55 + i * 0.31) % 1;
+      const bbx = bx + Math.sin((time + i) * 1.4) * 1.8 + (i - 2) * 1.1;
+      const bby = byCenter - bRy - 1 - t0 * 26;
+      const r = 0.65 + t0 * 1.2;
+      ctx.globalAlpha = (1 - t0) * 0.7;
+      ctx.fillStyle = `rgba(235,248,255,${(1 - t0) * 0.32})`;
+      ctx.beginPath();
+      ctx.arc(bbx, bby, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = `rgba(235,245,250,${(1 - t0) * 0.8})`;
+      ctx.lineWidth = 0.5;
+      ctx.beginPath();
+      ctx.arc(bbx, bby, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+    ctx.restore();
   }
 
   ctx.restore();
@@ -1736,7 +2059,8 @@ function App() {
     };
     const keyHandler = (e) => {
       if (!started || winner) return;
-      const isReload = e.key === "F5" || ((e.ctrlKey || e.metaKey) && e.key === "r");
+      const isReload =
+        e.key === "F5" || ((e.ctrlKey || e.metaKey) && e.key === "r");
       if (isReload) {
         e.preventDefault();
         setExitModal(true);
@@ -1849,6 +2173,11 @@ function App() {
       targetY: dropY,
       hooked: null,
       splashed: false,
+      // Pendulum swing (radians off vertical, pivoting at the eye / line attachment)
+      swing: 0,
+      swingVel: 0,
+      // Per-cast random phase so multi-frequency turbulence differs each drop
+      phase: Math.random() * 100,
     };
     setHookBusy(true);
     // Audio: init + cast SFX
@@ -2007,9 +2336,26 @@ function App() {
             hk.y = hk.targetY;
             hk.state = "set";
             hk.settledAt = s.time;
+            // Cast splash gives the rig an initial pendulum kick — direction
+            // depends on which side of the rod tip it landed.
+            const offsetFromRod = hk.dropX - rodTip.x;
+            hk.swingVel =
+              -Math.sign(offsetFromRod || 1) * (1.6 + Math.random() * 1.4);
           }
         } else if (hk.state === "set") {
-          // Slight drift; auto-timeout if nothing bites
+          // ── Real pendulum physics — line + gravity restore + turbulence ──
+          // The rig hangs from the rod; gentle current pushes it around, line
+          // tension pulls it back to vertical. Multi-frequency noise keeps it
+          // from looking like a clean sinewave.
+          const restore = -Math.sin(hk.swing) * 3.6;
+          const damping = -hk.swingVel * 0.55;
+          const current =
+            Math.sin(s.time * 0.45 + hk.phase) * 0.7 +
+            Math.sin(s.time * 1.3 + hk.phase * 1.7) * 0.35 +
+            (Math.random() - 0.5) * 0.35;
+          hk.swingVel += (restore + damping + current) * dt;
+          hk.swing += hk.swingVel * dt;
+          // Auto-timeout if nothing bites
           if (s.time - hk.settledAt > 8) {
             hk.state = "reeling";
           }
@@ -2057,10 +2403,17 @@ function App() {
             const sp = WORLD.reelSpeed;
             hk.x += (dx / d) * sp * dt;
             hk.y += (dy / d) * sp * dt;
+            // Damp the swing — the line tightens during the fight
+            hk.swing *= 1 - Math.min(1, dt * 4);
+            hk.swingVel *= 1 - Math.min(1, dt * 3);
             if (hk.hooked) {
-              hk.hooked.x = hk.x;
-              hk.hooked.y = hk.y;
+              // Anchor the fish so its MOUTH (nose) is at the hook position —
+              // that's where the J penetrates. Fish center sits behind the
+              // mouth along the heading direction.
               if (d > 50) hk.hooked.heading = Math.atan2(dy, dx);
+              const noseOff = hk.hooked.length * 0.5;
+              hk.hooked.x = hk.x - Math.cos(hk.hooked.heading) * noseOff;
+              hk.hooked.y = hk.y - Math.sin(hk.hooked.heading) * noseOff;
             }
           }
         }
@@ -2206,13 +2559,49 @@ function App() {
       if (s.hook) {
         const tension = s.hook.state === "reeling" ? 1 : 0.4;
         const hooked = !!s.hook.hooked;
-        // When hooked: J-curve is at hook.x/y (fish mouth); eye is offset above.
-        // Line connects to the eye, not the J-curve.
-        const lineEndX = hooked ? s.hook.x - HOOK_J_OX : s.hook.x;
-        const lineEndY = hooked ? s.hook.y - HOOK_J_OY : s.hook.y;
-        drawLine(ctx, rodTip.x, rodTip.y, lineEndX, lineEndY, tension);
-        // Hook drawn after fish so the J is visible on top — fish appears to eat it
-        drawHook(ctx, s.hook.x, s.hook.y, hooked);
+        const swing = s.hook.swing || 0;
+        // Geometry of the hook in its local coords: eye at (0,0), J-curve at (14,16).
+        const J_TO_EYE = Math.hypot(14, 16); // ≈ 21.26
+        const J_LOCAL_ANGLE = Math.atan2(16, 14); // direction from eye → J in local coords
+
+        let eyeX, eyeY, drawX, drawY;
+        if (hooked) {
+          // hook.x/y is the J (= fish mouth). Eye sits outside the mouth, in the
+          // direction of the rod tip, at fixed J→eye distance.
+          const lineDir = Math.atan2(rodTip.y - s.hook.y, rodTip.x - s.hook.x);
+          eyeX = s.hook.x + Math.cos(lineDir) * J_TO_EYE;
+          eyeY = s.hook.y + Math.sin(lineDir) * J_TO_EYE;
+          drawX = s.hook.x;
+          drawY = s.hook.y;
+          drawLine(ctx, rodTip.x, rodTip.y, eyeX, eyeY, tension);
+          drawHook(
+            ctx,
+            drawX,
+            drawY,
+            true,
+            s.time,
+            swing,
+            lineDir,
+            J_TO_EYE,
+            J_LOCAL_ANGLE,
+          );
+        } else {
+          // hook.x/y is the eye. Pendulum swings around the eye.
+          eyeX = s.hook.x;
+          eyeY = s.hook.y;
+          drawLine(ctx, rodTip.x, rodTip.y, eyeX, eyeY, tension);
+          drawHook(
+            ctx,
+            eyeX,
+            eyeY,
+            false,
+            s.time,
+            swing,
+            0,
+            J_TO_EYE,
+            J_LOCAL_ANGLE,
+          );
+        }
       } else {
         drawLine(ctx, rodTip.x, rodTip.y, rodTip.x + 2, rodTip.y + 14, 0.9);
       }
@@ -2322,8 +2711,16 @@ function App() {
       /*#__PURE__*/ React.createElement(
         "div",
         { className: "catch-flash" },
-        /*#__PURE__*/ React.createElement("span", { className: "catch-flash-label" }, "Caught"),
-        /*#__PURE__*/ React.createElement("span", { className: "catch-flash-name" }, catchFlash),
+        /*#__PURE__*/ React.createElement(
+          "span",
+          { className: "catch-flash-label" },
+          "Caught",
+        ),
+        /*#__PURE__*/ React.createElement(
+          "span",
+          { className: "catch-flash-name" },
+          catchFlash,
+        ),
       ),
     exitModal &&
       /*#__PURE__*/ React.createElement(
@@ -2332,20 +2729,28 @@ function App() {
         /*#__PURE__*/ React.createElement(
           "div",
           { className: "exit-modal" },
-          /*#__PURE__*/ React.createElement("h2", null, "Leave the tournament?"),
-          /*#__PURE__*/ React.createElement("p", null, "You will lose all your current progress."),
+          /*#__PURE__*/ React.createElement(
+            "h2",
+            null,
+            "Leave the tournament?",
+          ),
+          /*#__PURE__*/ React.createElement(
+            "p",
+            null,
+            "You will lose all your current progress.",
+          ),
           /*#__PURE__*/ React.createElement(
             "div",
             { className: "exit-modal-btns" },
             /*#__PURE__*/ React.createElement(
               "button",
               { className: "exit-stay", onClick: () => setExitModal(false) },
-              "Stay"
+              "Stay",
             ),
             /*#__PURE__*/ React.createElement(
               "button",
               { className: "exit-leave", onClick: () => location.reload() },
-              "Leave"
+              "Leave",
             ),
           ),
         ),
@@ -2362,11 +2767,7 @@ function App() {
         },
         "Carp",
         /*#__PURE__*/ React.createElement("em", null, "Life"),
-        /*#__PURE__*/ React.createElement(
-          "small",
-          null,
-          "last man standing",
-        ),
+        /*#__PURE__*/ React.createElement("small", null, "last man standing"),
       ),
       /*#__PURE__*/ React.createElement(
         "div",
