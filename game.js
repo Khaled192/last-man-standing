@@ -1505,13 +1505,13 @@ function drawLine(ctx, x1, y1, x2, y2, tension) {
   ctx.quadraticCurveTo(mx, my, x2, y2);
   ctx.stroke();
 }
-// J-bend center in hook-local coords (used to align fish mouth to J when hooked)
 const HOOK_J_OX = 7, HOOK_J_OY = 20;
 
 function drawHook(ctx, x, y, hooked) {
   ctx.save();
-  // Not hooked: eye at (x,y) — line ties here, bait hangs below J.
-  // Hooked:     J-bend center at (x,y) — fish mouth position; eye is offset up.
+  // Not hooked: eye at (x,y) — where the line ties.
+  // Hooked: J-curve at (x,y) — the fish's mouth position.
+  //         Eye is offset above/left, line connects there.
   ctx.translate(hooked ? x - HOOK_J_OX : x, hooked ? y - HOOK_J_OY : y);
 
   if (!hooked) {
@@ -2183,12 +2183,7 @@ function App() {
       }
       ctx.restore();
 
-      // Hook (J-bend only, under fish) when a fish is hooked
-      if (s.hook && s.hook.hooked) {
-        drawHook(ctx, s.hook.x, s.hook.y, true);
-      }
-
-      // Fish — always above the J-bend
+      // Fish
       for (const f of s.fish)
         f.draw(ctx, p, t.showFishOutline, s.lanternPos, t.showNames);
 
@@ -2211,11 +2206,13 @@ function App() {
       if (s.hook) {
         const tension = s.hook.state === "reeling" ? 1 : 0.4;
         const hooked = !!s.hook.hooked;
+        // When hooked: J-curve is at hook.x/y (fish mouth); eye is offset above.
+        // Line connects to the eye, not the J-curve.
         const lineEndX = hooked ? s.hook.x - HOOK_J_OX : s.hook.x;
         const lineEndY = hooked ? s.hook.y - HOOK_J_OY : s.hook.y;
         drawLine(ctx, rodTip.x, rodTip.y, lineEndX, lineEndY, tension);
-        // Not hooked: draw full hook+bait above fish; hooked: already drawn under fish
-        if (!hooked) drawHook(ctx, s.hook.x, s.hook.y, false);
+        // Hook drawn after fish so the J is visible on top — fish appears to eat it
+        drawHook(ctx, s.hook.x, s.hook.y, hooked);
       } else {
         drawLine(ctx, rodTip.x, rodTip.y, rodTip.x + 2, rodTip.y + 14, 0.9);
       }
