@@ -1505,14 +1505,63 @@ function drawLine(ctx, x1, y1, x2, y2, tension) {
   ctx.quadraticCurveTo(mx, my, x2, y2);
   ctx.stroke();
 }
+// J-bend center in hook-local coords (used to align fish mouth to J when hooked)
+const HOOK_J_OX = 7, HOOK_J_OY = 20;
+
 function drawHook(ctx, x, y, hooked) {
   ctx.save();
-  ctx.translate(x, y);
+  // Not hooked: eye at (x,y) — line ties here, bait hangs below J.
+  // Hooked:     J-bend center at (x,y) — fish mouth position; eye is offset up.
+  ctx.translate(hooked ? x - HOOK_J_OX : x, hooked ? y - HOOK_J_OY : y);
+
+  if (!hooked) {
+    // Bait boilie below the J-bend (threaded on the hook)
+    const bx = 7, by = 32, bR = 8;
+
+    ctx.save();
+    ctx.globalAlpha = 0.25;
+    ctx.fillStyle = "#000";
+    ctx.beginPath();
+    ctx.ellipse(bx + 2, by + 9, 7, 2, 0, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.globalAlpha = 0.38;
+    const glow = ctx.createRadialGradient(bx, by, 2, bx, by, 14);
+    glow.addColorStop(0, "rgba(255,80,30,.65)");
+    glow.addColorStop(1, "rgba(255,80,30,0)");
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(bx, by, 14, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.restore();
+
+    ctx.save();
+    ctx.translate(bx, by);
+    const baitG = ctx.createRadialGradient(-bR * 0.38, -bR * 0.42, bR * 0.1, 0, 0, bR * 1.05);
+    baitG.addColorStop(0,   "#ff8a40");
+    baitG.addColorStop(0.4, "#d42e10");
+    baitG.addColorStop(1.0, "#7a1006");
+    ctx.fillStyle = baitG;
+    ctx.beginPath();
+    ctx.arc(0, 0, bR, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = "rgba(255,248,225,.88)";
+    ctx.beginPath();
+    ctx.ellipse(-bR * 0.38, -bR * 0.42, bR * 0.28, bR * 0.17, -0.5, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.strokeStyle = "rgba(70,6,2,.40)";
+    ctx.lineWidth = 0.6;
+    ctx.beginPath();
+    ctx.arc(0, 0, bR, 0, Math.PI * 2);
+    ctx.stroke();
+    ctx.restore();
+  }
 
   const hookColor = "#dde4ec";
   const hookShadow = "rgba(18,26,38,.60)";
 
-  // J-shape — shadow pass then highlight pass
   for (let pass = 0; pass < 2; pass++) {
     ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
     ctx.lineWidth   = pass === 0 ? 3.8 : 2.4;
@@ -1524,14 +1573,12 @@ function drawHook(ctx, x, y, hooked) {
     ctx.bezierCurveTo(0, 24, 14, 26, 14, 16);
     ctx.lineTo(14, 8);
     ctx.stroke();
-    // Barb
     ctx.beginPath();
     ctx.moveTo(14, 12);
     ctx.lineTo(10, 9);
     ctx.stroke();
   }
 
-  // Eye loop at top — fishing line ties here
   for (let pass = 0; pass < 2; pass++) {
     ctx.strokeStyle = pass === 0 ? hookShadow : hookColor;
     ctx.lineWidth   = pass === 0 ? 3.2 : 1.9;
@@ -2158,8 +2205,13 @@ function App() {
       drawRod(ctx, rodHandle.x, rodHandle.y, rodTip.x, rodTip.y);
       if (s.hook) {
         const tension = s.hook.state === "reeling" ? 1 : 0.4;
-        drawLine(ctx, rodTip.x, rodTip.y, s.hook.x, s.hook.y, tension);
-        drawHook(ctx, s.hook.x, s.hook.y, !!s.hook.hooked);
+        const hooked = !!s.hook.hooked;
+        // When hooked the hook is offset so the J-bend is at hook.x/y;
+        // the eye (line end) is shifted back by the J-bend offset.
+        const lineEndX = hooked ? s.hook.x - HOOK_J_OX : s.hook.x;
+        const lineEndY = hooked ? s.hook.y - HOOK_J_OY : s.hook.y;
+        drawLine(ctx, rodTip.x, rodTip.y, lineEndX, lineEndY, tension);
+        drawHook(ctx, s.hook.x, s.hook.y, hooked);
       } else {
         drawLine(ctx, rodTip.x, rodTip.y, rodTip.x + 2, rodTip.y + 14, 0.9);
       }
